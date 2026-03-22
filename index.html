@@ -4,798 +4,650 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>化学计时器 - Chemistry Timer</title>
-    <!-- 引入字体 -->
+<link rel="icon" href="pictures/化学计时器.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- 引入图标库 -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        :root {
-            /* 品牌色 */
-            --brand-primary: #3b82f6; 
-            --brand-dark: #1e3a8a;
-            --brand-accent: #8b5cf6; 
-            
-            /* 背景色系统 */
-            --bg-body: #ffffff;
-            --bg-surface: #f8fafc;
-            --bg-card: #ffffff;
-            --bg-footer: #f1f5f9;
-            
-            /* 文字系统 */
-            --text-main: #0f172a;
-            --text-secondary: #475569;
-            --text-light: #94a3b8;
-            
-            /* 辅助色 */
-            --tag-bg: #e0f2fe;
-            --tag-text: #0284c7;
-            --hotkey-bg: #f1f5f9;
-            --hotkey-border: #cbd5e1;
-            
-            /* 阴影 */
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            
-            /* 渐变 */
-            --gradient-hero: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);
-            --gradient-core: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        }
+:root{
+--c-bg:#08080f;--c-surface:#0f0f1a;--c-card:#14141f;
+--c-border:rgba(255,255,255,0.07);--c-border-hi:rgba(255,255,255,0.13);
+--c-text:#eeedf8;--c-muted:#7874a0;--c-faint:#2a2a40;
+--c-blue:#5b9cf6;--c-purple:#a07aff;--c-teal:#2dd4bf;
+--c-amber:#f6a832;--c-rose:#f4506a;--c-green:#34d974;
+--grad-brand:linear-gradient(135deg,#5b9cf6 0%,#a07aff 100%);
+--shadow-card:0 0 0 1px rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.6);
+--shadow-glow:0 0 60px rgba(91,156,246,0.18);--r-card:18px;
+}
+[data-theme="light"]{
+--c-bg:#f4f3fc;--c-surface:#eae9f5;--c-card:#fff;
+--c-border:rgba(0,0,0,0.07);--c-border-hi:rgba(0,0,0,0.12);
+--c-text:#0d0c1a;--c-muted:#5c5880;--c-faint:#cccae0;
+--shadow-card:0 0 0 1px rgba(0,0,0,0.06),0 8px 28px rgba(0,0,0,0.09);
+--shadow-glow:0 0 40px rgba(91,156,246,0.12);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:"Space Grotesk","Noto Sans SC",sans-serif;
+background:var(--c-bg);color:var(--c-text);line-height:1.6;
+overflow-x:hidden;transition:background .3s,color .3s;
+min-height:100vh;display:flex;flex-direction:column;}
+#prog{position:fixed;top:0;left:0;height:2px;width:0%;z-index:9999;
+background:var(--grad-brand);transition:width .35s,opacity .2s;}
+.nav{position:fixed;top:0;width:100%;height:64px;z-index:1000;
+display:flex;align-items:center;background:rgba(8,8,15,0.82);
+backdrop-filter:blur(24px) saturate(180%);
+border-bottom:1px solid var(--c-border);transition:background .3s;}
+[data-theme="light"] .nav{background:rgba(244,243,252,0.88);}
+.nav-inner{width:100%;max-width:1280px;margin:0 auto;padding:0 28px;
+display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;
+color:var(--c-text);font-weight:700;font-size:1.05rem;cursor:pointer;}
+.nav-logo img{height:32px;border-radius:8px;object-fit:contain;}
+.logo-text{background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-links{display:flex;gap:2px;}
+.nav-link{padding:7px 16px;border-radius:10px;text-decoration:none;
+color:var(--c-muted);font-size:.88rem;font-weight:500;transition:all .2s;cursor:pointer;}
+.nav-link:hover{color:var(--c-text);background:rgba(255,255,255,0.05);}
+.nav-link.active{color:var(--c-text);background:rgba(255,255,255,0.08);}
+[data-theme="light"] .nav-link:hover{background:rgba(0,0,0,0.04);}
+[data-theme="light"] .nav-link.active{background:rgba(0,0,0,0.06);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:none;
+background:transparent;color:var(--c-muted);
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;font-size:1rem;transition:all .2s;text-decoration:none;}
+.icon-btn:hover{color:var(--c-text);background:rgba(255,255,255,0.07);}
+[data-theme="light"] .icon-btn:hover{background:rgba(0,0,0,0.05);}
+.page{display:none;padding-top:64px;}
+.page.active{display:block;animation:pgIn .42s cubic-bezier(.22,1,.36,1);}
+@keyframes pgIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.hero{position:relative;min-height:calc(100vh - 64px);display:flex;align-items:center;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;pointer-events:none;
+background-image:linear-gradient(var(--c-border) 1px,transparent 1px),linear-gradient(90deg,var(--c-border) 1px,transparent 1px);
+background-size:56px 56px;
+mask-image:radial-gradient(ellipse 80% 55% at 50% 0%,black,transparent 80%);}
+.hero-glow-a{position:absolute;width:700px;height:700px;border-radius:50%;
+background:radial-gradient(circle,rgba(91,156,246,.15) 0%,transparent 65%);
+top:-200px;left:-150px;pointer-events:none;}
+.hero-glow-b{position:absolute;width:600px;height:600px;border-radius:50%;
+background:radial-gradient(circle,rgba(160,122,255,.13) 0%,transparent 65%);
+bottom:-100px;right:-80px;pointer-events:none;}
+.hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:80px 28px;
+display:grid;grid-template-columns:1fr 1.15fr;gap:72px;align-items:center;width:100%;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 16px;
+border:1px solid rgba(91,156,246,.35);border-radius:50px;
+font-size:.75rem;font-weight:700;color:var(--c-blue);background:rgba(91,156,246,.12);
+margin-bottom:24px;font-family:"JetBrains Mono",monospace;letter-spacing:.06em;
+backdrop-filter:blur(8px);}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--c-blue);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero-title{font-family:"Noto Sans SC",sans-serif;
+font-size:clamp(2.8rem,5vw,4.4rem);font-weight:900;
+line-height:1.05;letter-spacing:-.03em;margin-bottom:10px;}
+.title-grad{background:var(--grad-brand);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-subtitle-cn{font-family:"Noto Sans SC",sans-serif;font-size:2rem;letter-spacing:.08em;
+color:#b29ffe;margin-bottom:6px;font-weight:600;opacity:.95;}
+.hero-subtitle{font-family:"JetBrains Mono",monospace;font-size:.85rem;letter-spacing:.15em;
+color:var(--c-muted);text-transform:uppercase;margin-bottom:30px;font-weight:400;}
+.hero-en{font-family:"JetBrains Mono",monospace;font-size:.75rem;letter-spacing:.2em;
+color:var(--c-muted);text-transform:uppercase;margin-bottom:30px;font-weight:500;}
+.scroll-container{font-size:1.3rem;color:var(--c-muted);margin-bottom:40px;display:flex;flex-direction:row;align-items:center;gap:0;height:2em;}
+.scroll-text{flex-shrink:0;white-space:nowrap;line-height:2em;font-size:1.3rem;}
+.scroll-win{flex-shrink:0;overflow:hidden;position:relative;height:2em;line-height:2em;padding:0 0.3em;}
+.scroll-track{display:flex;flex-direction:column;animation:scrollW 14s infinite cubic-bezier(0.34,1.56,0.64,1);will-change:transform;}
+.scroll-word{display:block;height:2em;line-height:2em;font-weight:700;white-space:nowrap;font-size:1.3rem;}
+.scroll-word:nth-child(1){color:var(--c-blue);}
+.scroll-word:nth-child(2){color:var(--c-purple);}
+.scroll-word:nth-child(3){color:var(--c-teal);}
+.scroll-word:nth-child(4){color:var(--c-amber);}
+.scroll-word:nth-child(5){color:var(--c-rose);}
+.scroll-word:nth-child(6){color:var(--c-green);}
+.scroll-word:nth-child(7){color:var(--c-blue);}
+@keyframes scrollW{
+0%{transform:translateY(0);}
+13%{transform:translateY(0);}
+15%{transform:translateY(-2em);}
+28%{transform:translateY(-2em);}
+30%{transform:translateY(-4em);}
+43%{transform:translateY(-4em);}
+45%{transform:translateY(-6em);}
+58%{transform:translateY(-6em);}
+60%{transform:translateY(-8em);}
+73%{transform:translateY(-8em);}
+75%{transform:translateY(-10em);}
+85%{transform:translateY(-10em);}
+87%{transform:translateY(-12em);}
+100%{transform:translateY(-12em);}
+}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 32px;border-radius:50px;
+font-size:.92rem;font-weight:600;text-decoration:none;transition:all .25s cubic-bezier(0.22,1,0.36,1);
+cursor:pointer;border:none;font-family:inherit;}
+.btn-primary{background:var(--grad-brand);color:#fff;box-shadow:0 8px 24px rgba(91,156,246,.4);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(91,156,246,.5);}
+.btn-ghost{background:transparent;color:var(--c-text);border:1px solid var(--c-border-hi);}
+.btn-ghost:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.2);}
+[data-theme="light"] .btn-ghost:hover{background:rgba(0,0,0,.04);}
+.hero-visual{position:relative;}
+.hero-img-wrap{position:relative;border-radius:12px;overflow:hidden;
+box-shadow:0 20px 60px rgba(0,0,0,0.3);border:none;transition:transform .4s cubic-bezier(0.22,1,0.36,1);
+margin-left:-20px;}
+.hero-img-wrap:hover{transform:translateY(-6px);box-shadow:0 30px 80px rgba(91,156,246,0.25);}
+.hero-img-wrap::after{content:'';position:absolute;inset:0;
+background:linear-gradient(to right,var(--c-bg) 0%,rgba(8,8,15,0.4) 30%,rgba(8,8,15,0.1) 60%,transparent 100%);
+pointer-events:none;z-index:1;}
+[data-theme="light"] .hero-img-wrap::after{background:linear-gradient(to right,var(--c-bg) 0%,rgba(244,243,252,0.3) 30%,rgba(244,243,252,0.05) 60%,transparent 100%);}
+.hero-img{width:100%;height:auto;display:block;position:relative;z-index:0;}
 
-        [data-theme="dark"] {
-            --bg-body: #0f172a;
-            --bg-surface: #1e293b;
-            --bg-card: #1e293b;
-            --bg-footer: #020617;
-            --text-main: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-light: #64748b;
-            --tag-bg: #172554;
-            --tag-text: #60a5fa;
-            --hotkey-bg: #334155;
-            --hotkey-border: #475569;
-            --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            --gradient-core: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
-            background: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-            transition: background 0.3s, color 0.3s;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* 顶部进度条 */
-        #page-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
-            width: 0%;
-            z-index: 2000;
-            transition: width 0.4s ease-out;
-        }
-
-        /* 导航栏 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        [data-theme="dark"] .navbar { background: rgba(15, 23, 42, 0.85); border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .nav-content {
-            width: 100%;
-            max-width: 1400px;
-            padding: 0 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-main);
-            text-decoration: none;
-        }
-        
-        /* Logo 图片样式调整 */
-        .logo-img { 
-            height: 36px; /* 稍微调大一点，使其更清晰 */
-            width: auto; 
-            border-radius: 6px; 
-            object-fit: contain;
-        }
-        
-        .nav-links { display: flex; gap: 32px; }
-        .nav-link {
-            text-decoration: none; color: var(--text-secondary);
-            font-weight: 500; transition: color 0.2s;
-            cursor: pointer; position: relative;
-        }
-        .nav-link:hover, .nav-link.active { color: var(--brand-primary); }
-        .nav-link.active { font-weight: 600; }
-        .nav-link.active::after {
-            content: ''; position: absolute; bottom: -24px; left: 0;
-            width: 100%; height: 2px; background: var(--brand-primary);
-        }
-
-        .nav-right { display: flex; align-items: center; gap: 16px; }
-
-        .theme-btn {
-            background: none; border: none; color: var(--text-secondary);
-            cursor: pointer; font-size: 1.1rem; width: 40px; height: 40px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .theme-btn:hover { background: var(--bg-surface); color: var(--brand-primary); transform: rotate(15deg) scale(1.1); }
-        .theme-btn:active { transform: scale(0.9); }
-
-        /* 页面容器 */
-        .page-section {
-            display: none; padding-top: 70px; min-height: 100vh;
-            animation: fadeIn 0.5s ease-out;
-            flex: 1; /* 让 Footer 沉底 */
-        }
-        .page-section.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* === Hero 区域 === */
-        .hero {
-            position: relative; 
-            background: var(--gradient-hero);
-            overflow: hidden; 
-            display: flex; 
-            align-items: center;
-            min-height: 100vh; 
-            padding-top: 70px; 
-            padding-bottom: 80px;
-        }
-
-        .hero-container {
-            max-width: 1400px; margin: 0 auto; padding: 40px 24px;
-            display: grid; grid-template-columns: 1fr 2fr; gap: 60px;
-            align-items: center; position: relative; z-index: 1;
-        }
-
-        .hero-content { 
-            text-align: left; 
-            position: relative; 
-            z-index: 5; 
-            transform: translateY(-20px);
-        }
-        
-        .hero-title {
-            font-size: 3.5rem; line-height: 1.1; margin-bottom: 4px;
-            background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-        .hero-subtitle-en {
-            font-size: 1.5rem; color: var(--text-light);
-            font-weight: 300; letter-spacing: 2px; margin-bottom: 32px;
-            font-family: 'Inter', sans-serif; text-transform: uppercase;
-        }
-
-        .hero-desc-wrapper {
-            font-size: 1.5rem; color: var(--text-main);
-            margin-bottom: 40px; line-height: 1.6; font-weight: 600;
-            display: flex; align-items: flex-end; flex-wrap: wrap;
-        }
-
-        /* 垂直滚动容器 */
-        .scroll-window {
-            height: 1.5em; overflow: hidden; display: inline-block;
-            vertical-align: bottom; position: relative; margin: 0 6px;
-            border-bottom: 3px solid var(--text-secondary);
-        }
-
-        .scroll-content {
-            display: block;
-            animation: scrollUp 12s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-
-        .scroll-item {
-            display: block; height: 1.5em; line-height: 1.5em;
-            text-align: center; font-weight: 800;
-        }
-
-        /* --- 多彩关键词 --- */
-        .scroll-item:nth-child(1) { color: #3b82f6; } /* 蓝 */
-        .scroll-item:nth-child(2) { color: #8b5cf6; } /* 紫 */
-        .scroll-item:nth-child(3) { color: #10b981; } /* 绿 */
-        .scroll-item:nth-child(4) { color: #f59e0b; } /* 橙 */
-        .scroll-item:nth-child(5) { color: #ec4899; } /* 粉 */
-        .scroll-item:nth-child(6) { color: #06b6d4; } /* 青 */
-        .scroll-item:nth-child(7) { color: #3b82f6; } /* 循环首个 */
-
-        @keyframes scrollUp {
-            0%, 15% { transform: translateY(0); }
-            16.6%, 31.6% { transform: translateY(-1.5em); }
-            33.3%, 48.3% { transform: translateY(-3em); }
-            50%, 65% { transform: translateY(-4.5em); }
-            66.6%, 81.6% { transform: translateY(-6em); }
-            83.3%, 98.3% { transform: translateY(-7.5em); }
-            100% { transform: translateY(-9em); }
-        }
-
-        /* Hero 右侧图片容器 */
-        .hero-visual { 
-            position: relative; 
-            height: 100%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: flex-end; /* 图片靠右 */
-        }
-        
-        .hero-img-container {
-            width: 100%; 
-            max-width: 1000px;
-            border-radius: 12px;
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
-            overflow: hidden;
-            transition: transform 0.3s; 
-            position: relative;
-            
-            /* 渐变 Mask */
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
-            mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
-            
-            transform: translateY(-20px);
-        }
-        
-        .hero-img { width: 100%; height: auto; display: block; }
-        .app-preview-fallback {
-            display: none; background: var(--bg-card);
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-
-        /* 按钮样式 */
-        .cta-buttons { display: flex; gap: 16px; }
-        .btn {
-            padding: 12px 32px; border-radius: 50px; font-weight: 600;
-            text-decoration: none; transition: all 0.2s;
-            display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; cursor: pointer;
-        }
-        .btn-primary {
-            background: var(--brand-primary); color: white;
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4); border: none;
-        }
-        .btn-primary:hover { transform: translateY(-2px); background: #2563eb; }
-        .btn-outline {
-            background: transparent; color: var(--text-main);
-            border: 1px solid var(--text-secondary);
-        }
-        .btn-outline:hover { background: var(--bg-surface); border-color: var(--text-main); }
-
-        /* === 核心功能板块 (Features Hero) === */
-        .features-hero {
-            background: var(--bg-surface);
-            padding: 60px 24px;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        [data-theme="dark"] .features-hero { border-color: rgba(255,255,255,0.05); }
-
-        .core-feature-container {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px;
-            align-items: center;
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: var(--shadow-xl);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .core-feature-text .tag {
-            display: inline-block; padding: 6px 12px;
-            background: var(--brand-primary); color: white;
-            border-radius: 20px; font-size: 0.85rem; font-weight: 700;
-            margin-bottom: 16px;
-        }
-        .core-feature-text h2 { font-size: 2rem; margin-bottom: 16px; line-height: 1.2; }
-        .core-feature-text p { color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 24px; }
-        .core-feature-text ul { list-style: none; color: var(--text-secondary); }
-        .core-feature-text li { margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .core-feature-text li i { color: var(--brand-primary); }
-
-        .core-video-wrapper {
-            position: relative; border-radius: 12px;
-            overflow: hidden; background: #000;
-            box-shadow: var(--shadow-md); aspect-ratio: 16/9;
-        }
-        .core-video { width: 100%; height: 100%; object-fit: contain; }
-        
-        .mute-btn {
-            position: absolute; bottom: 16px; right: 16px;
-            background: rgba(0,0,0,0.6); color: white;
-            border: none; border-radius: 50%; width: 40px; height: 40px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: background 0.2s; backdrop-filter: blur(4px);
-        }
-        .mute-btn:hover { background: rgba(0,0,0,0.8); }
-
-        /* === 功能网格 === */
-        .features-grid-section {
-            background: var(--bg-body);
-            padding: 60px 24px 80px;
-        }
-        .section-header { text-align: center; margin-bottom: 60px; }
-        .section-header h2 { font-size: 2rem; margin-bottom: 8px; }
-        
-        .feature-grid {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            background: var(--bg-surface); border-radius: 20px;
-            overflow: hidden; border: 1px solid rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            display: flex; flex-direction: column;
-        }
-        .feature-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-xl); }
-
-        .feature-img-box {
-            width: 100%; height: 200px; background: #e2e8f0;
-            position: relative; display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-        [data-theme="dark"] .feature-img-box { background: #1e293b; }
-        .feature-img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-        .feature-fallback {
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            width: 100%; height: 100%; color: var(--text-light);
-        }
-        .feature-fallback i { font-size: 3rem; margin-bottom: 10px; color: var(--brand-primary); }
-
-        .feature-text { padding: 24px; flex: 1; display: flex; flex-direction: column; }
-        .feature-text h3 { margin-bottom: 8px; font-size: 1.25rem; }
-        .feature-text p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
-
-        /* === 下载中心 === */
-        .download-page-content {
-            max-width: 900px; 
-            margin: 40px auto 100px; 
-            text-align: center; 
-            padding: 0 24px;
-        }
-        .download-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
-            margin: 60px 0;
-        }
-        .download-option {
-            background: var(--bg-surface); padding: 40px;
-            border-radius: 20px; border: 2px solid transparent;
-            transition: all 0.3s; cursor: pointer; position: relative;
-        }
-        .download-option:hover {
-            border-color: var(--brand-primary); background: var(--bg-card);
-            box-shadow: var(--shadow-xl); transform: translateY(-5px);
-        }
-        .badge-rec {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            background: var(--brand-primary); color: white; padding: 4px 16px;
-            border-radius: 20px; font-size: 0.85rem; font-weight: bold;
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
-        }
-
-        /* === 页脚 === */
-        .footer {
-            background: var(--bg-footer);
-            padding: 40px 24px;
-            margin-top: auto; /* 确保页脚沉底 */
-            border-top: 1px solid rgba(0,0,0,0.05);
-        }
-        [data-theme="dark"] .footer { border-top-color: rgba(255,255,255,0.05); }
-
-        .footer-content {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; flex-direction: column; align-items: center; gap: 20px;
-        }
-        .footer-links { display: flex; gap: 24px; }
-        .footer-links a {
-            color: var(--text-secondary); text-decoration: none;
-            transition: color 0.2s;
-        }
-        .footer-links a:hover { color: var(--brand-primary); }
-        .copyright { color: var(--text-light); font-size: 0.9rem; text-align: center; }
-
-        @media (max-width: 968px) {
-            .hero-container { grid-template-columns: 1fr; text-align: center; gap: 40px; }
-            .hero-content { align-items: center; display: flex; flex-direction: column; transform: none; }
-            .hero-img-container { transform: none; mask-image: none; -webkit-mask-image: none; }
-            .hero-desc-wrapper { justify-content: center; }
-            .nav-links { display: none; }
-            .download-grid { grid-template-columns: 1fr; }
-            .core-feature-container { grid-template-columns: 1fr; padding: 24px; }
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:6px;
+font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;}
+.chip-beta{background:rgba(246,168,50,.12);color:var(--c-amber);border:1px solid rgba(246,168,50,.25);}
+.chip-stable{background:rgba(91,156,246,.12);color:var(--c-blue);border:1px solid rgba(91,156,246,.25);}
+.feat-page{max-width:1280px;margin:0 auto;padding:56px 28px 80px;}
+.sec-label{font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.15em;
+text-transform:uppercase;color:var(--c-blue);margin-bottom:8px;}
+.sec-title{font-family:"Noto Sans SC",sans-serif;
+font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;letter-spacing:-.01em;margin-bottom:10px;}
+.sec-desc{color:var(--c-muted);font-size:1rem;max-width:520px;line-height:1.75;}
+.sec-head{margin-bottom:48px;}
+.core-block{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+background:var(--c-card);border:1px solid var(--c-border-hi);
+border-radius:var(--r-card);padding:40px;box-shadow:var(--shadow-card);
+margin-bottom:64px;position:relative;overflow:hidden;}
+.core-block::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+background:var(--grad-brand);opacity:.7;}
+.core-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;
+border-radius:50px;background:var(--grad-brand);color:#fff;
+font-size:.72rem;font-weight:700;margin-bottom:16px;
+font-family:"JetBrains Mono",monospace;letter-spacing:.04em;}
+.core-title{font-family:"Noto Sans SC",sans-serif;
+font-size:1.7rem;font-weight:800;line-height:1.2;margin-bottom:14px;}
+.core-desc{color:var(--c-muted);font-size:.95rem;line-height:1.75;margin-bottom:22px;}
+.core-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.core-list li{display:flex;align-items:flex-start;gap:10px;
+color:var(--c-muted);font-size:.9rem;line-height:1.6;}
+.core-list li i{color:var(--c-blue);margin-top:3px;flex-shrink:0;}
+.video-wrap{position:relative;border-radius:14px;overflow:hidden;
+background:#000;box-shadow:var(--shadow-card);aspect-ratio:16/9;
+border:1px solid var(--c-border-hi);}
+.feat-video{width:100%;height:100%;object-fit:contain;display:block;}
+.mute-btn{position:absolute;bottom:12px;right:12px;width:38px;height:38px;
+border-radius:50%;border:none;background:rgba(0,0,0,.65);
+backdrop-filter:blur(8px);color:#fff;cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+transition:all .2s;font-size:.9rem;}
+.mute-btn:hover{background:rgba(91,156,246,.8);}
+.new-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:56px;}
+.new-card{background:var(--c-card);border:1px solid var(--c-border);
+border-radius:14px;padding:20px;display:flex;gap:14px;align-items:flex-start;
+transition:transform .3s,border-color .3s;}
+.new-card:hover{transform:translateY(-3px);border-color:var(--c-border-hi);}
+.new-icon{width:40px;height:40px;border-radius:12px;flex-shrink:0;
+display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.ni-blue{background:rgba(91,156,246,.15);color:var(--c-blue);}
+.ni-purple{background:rgba(160,122,255,.15);color:var(--c-purple);}
+.ni-teal{background:rgba(45,212,191,.15);color:var(--c-teal);}
+.ni-amber{background:rgba(246,168,50,.15);color:var(--c-amber);}
+.ni-rose{background:rgba(244,80,106,.15);color:var(--c-rose);}
+.ni-green{background:rgba(52,217,116,.15);color:var(--c-green);}
+.new-text h4{font-size:.95rem;font-weight:700;margin-bottom:4px;}
+.new-text p{font-size:.82rem;color:var(--c-muted);line-height:1.55;}
+.new-badge{display:inline-flex;padding:2px 7px;border-radius:4px;
+font-family:"JetBrains Mono",monospace;font-size:.6rem;font-weight:700;
+background:rgba(52,217,116,.15);color:var(--c-green);
+border:1px solid rgba(52,217,116,.25);margin-left:6px;vertical-align:middle;}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+.feat-card{background:var(--c-card);border:1px solid var(--c-border);
+border-radius:var(--r-card);overflow:hidden;
+transition:transform .3s,box-shadow .3s,border-color .3s;}
+.feat-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-card);
+border-color:var(--c-border-hi);}
+.feat-img-box{width:100%;height:190px;overflow:hidden;background:var(--c-surface);}
+.feat-img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s;}
+.feat-card:hover .feat-img{transform:scale(1.04);}
+.feat-fallback{display:none;width:100%;height:100%;align-items:center;
+justify-content:center;flex-direction:column;gap:10px;color:var(--c-muted);font-size:.85rem;}
+.feat-fallback i{font-size:2.5rem;color:var(--c-blue);}
+.feat-body{padding:22px;}
+.feat-icon-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.feat-icon{width:36px;height:36px;border-radius:10px;background:var(--grad-brand);
+display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem;flex-shrink:0;}
+.feat-name{font-weight:700;font-size:1.05rem;}
+.feat-desc{color:var(--c-muted);font-size:.88rem;line-height:1.65;margin-top:8px;}
+.dl-page{max-width:960px;margin:0 auto;padding:56px 28px 80px;}
+.dl-hero{text-align:center;margin-bottom:56px;}
+.dl-hero h1{font-family:"Noto Sans SC",sans-serif;
+font-size:clamp(2rem,4vw,3rem);font-weight:900;margin-bottom:12px;}
+.dl-hero p{color:var(--c-muted);font-size:1rem;}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:48px;}
+.dl-card{background:var(--c-card);border:2px solid var(--c-border);
+border-radius:var(--r-card);padding:36px 32px;
+transition:all .3s;position:relative;overflow:hidden;}
+.dl-card:hover{border-color:var(--c-blue);box-shadow:var(--shadow-glow);transform:translateY(-4px);}
+.dl-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+background:var(--grad-brand);transform:scaleX(0);transition:transform .3s;transform-origin:left;}
+.dl-card:hover::before{transform:scaleX(1);}
+.dl-rec{position:absolute;top:-1px;left:50%;transform:translateX(-50%);
+padding:4px 16px;border-radius:0 0 10px 10px;
+background:var(--grad-brand);color:#fff;font-size:.72rem;font-weight:700;
+font-family:"JetBrains Mono",monospace;letter-spacing:.05em;}
+.dl-os-icon{font-size:3.5rem;margin-bottom:20px;display:block;}
+.dl-card h3{font-family:"Noto Sans SC",sans-serif;
+font-size:1.4rem;font-weight:800;margin-bottom:6px;}
+.dl-ver{color:var(--c-muted);font-size:.85rem;margin-bottom:20px;
+font-family:"JetBrains Mono",monospace;}
+.dl-features{list-style:none;margin-bottom:24px;display:flex;flex-direction:column;gap:8px;}
+.dl-features li{display:flex;align-items:center;gap:8px;color:var(--c-muted);font-size:.88rem;}
+.dl-features li i{color:var(--c-green);font-size:.8rem;}
+.btn-dl{width:100%;justify-content:center;background:var(--grad-brand);
+color:#fff;box-shadow:0 4px 20px rgba(91,156,246,.3);}
+.btn-dl:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(91,156,246,.5);}
+.btn-gh{width:100%;justify-content:center;background:transparent;
+color:var(--c-text);border:1px solid var(--c-border-hi);}
+.btn-gh:hover{background:rgba(255,255,255,.05);}
+[data-theme="light"] .btn-gh:hover{background:rgba(0,0,0,.04);}
+.dl-note{text-align:center;color:var(--c-muted);font-size:.88rem;line-height:1.7;}
+.dl-note a{color:var(--c-blue);text-decoration:none;}
+.dl-note a:hover{text-decoration:underline;}
+.footer{background:var(--c-surface);border-top:1px solid var(--c-border);padding:32px 28px;margin-top:auto;}
+.footer-inner{max-width:1280px;margin:0 auto;
+display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{display:flex;align-items:center;gap:8px;
+font-weight:700;font-size:.95rem;color:var(--c-muted);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{color:var(--c-muted);text-decoration:none;font-size:.88rem;transition:color .2s;}
+.footer-links a:hover{color:var(--c-text);}
+.footer-copy{color:var(--c-faint);font-size:.8rem;}
+@media(max-width:968px){
+.hero-inner{grid-template-columns:1fr;gap:40px;padding:48px 20px;}
+.hero-img-wrap::after{display:none;}
+.float-tag-a,.float-tag-b{display:none;}
+.nav-links{display:none;}
+.core-block{grid-template-columns:1fr;padding:24px;}
+.dl-grid{grid-template-columns:1fr;}
+.footer-inner{flex-direction:column;text-align:center;}
         }
     </style>
 </head>
 <body>
-
-    <!-- 页面切换进度条 -->
-    <div id="page-progress"></div>
-
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="nav-content">
-            <a href="#" class="logo" onclick="switchPage('home')">
-                <!-- 更新：移除了 fallback，强制显示图片 -->
-                <img src="pictures/化学计时器.png" alt="化学计时器" class="logo-img">
-                <span>化学计时器</span>
+<div id="prog"></div>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" onclick="switchPage('home')">
+      <img src="pictures/化学计时器.png" alt="logo">
+      <span class="logo-text">化学计时器</span>
             </a>
             <div class="nav-links">
-                <a href="#home" class="nav-link active" data-target="home">主页</a>
-                <a href="#features" class="nav-link" data-target="features">功能展示</a>
-                <a href="#download" class="nav-link" data-target="download">下载中心</a>
+      <a class="nav-link active" data-page="home" onclick="switchPage('home')">主页</a>
+      <a class="nav-link" data-page="features" onclick="switchPage('features')">功能展示</a>
+      <a class="nav-link" data-page="download" onclick="switchPage('download')">下载中心</a>
             </div>
             <div class="nav-right">
-                <a href="https://github.com/SuangSue/Chemistry_timer" target="_blank" class="nav-link" title="GitHub">
-                    <i class="fab fa-github" style="font-size: 1.2rem;"></i>
+      <a class="icon-btn" href="https://github.com/SuangSue/Chemistry_timer" target="_blank" title="GitHub">
+        <i class="fab fa-github"></i>
                 </a>
-                <button class="theme-btn" id="themeToggle" title="切换主题">
-                    <i class="fas fa-moon"></i>
+      <button class="icon-btn" id="themeBtn" title="切换主题">
+        <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- 主页 (Home Section) -->
-    <section id="home" class="page-section active">
+<!-- HOME -->
+<section id="home" class="page active">
         <div class="hero">
-            <div class="hero-container">
-                <div class="hero-content">
-                    <div class="award-badge" style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:rgba(59,130,246,0.1); color:var(--brand-primary); border-radius:20px; font-size:0.8rem; margin-bottom:16px;">
-                        <i class="fas fa-star"></i> 第40届温州市青创赛成果
-                    </div>
-                    <h1 class="hero-title">化学计时器</h1>
-                    <h2 class="hero-subtitle-en">Chemistry Timer</h2>
-                    
-                    <div class="hero-desc-wrapper">
-                        <span>为</span>
-                        <div class="scroll-window">
-                            <div class="scroll-content">
-                                <div class="scroll-item">化学教学</div>
-                                <div class="scroll-item">点名抽签</div>
-                                <div class="scroll-item">实验计时</div>
-                                <div class="scroll-item">大屏考试</div>
-                                <div class="scroll-item">演示使用</div>
-                                <div class="scroll-item">学科融合</div>
-                                <div class="scroll-item">化学教学</div>
-                            </div>
-                        </div>
-                        <span>设计的</span><br>
-                        <span>课堂点名计时工具</span>
-                    </div>
-                    
-                    <div class="cta-buttons">
-                        <a href="#download" class="btn btn-primary" onclick="switchPage('download')">
-                            免费下载 <i class="fas fa-arrow-right"></i>
-                        </a>
-                        <a href="#features" class="btn btn-outline" onclick="switchPage('features')">
-                            了解功能
+    <div class="hero-grid"></div>
+    <div class="hero-glow-a"></div>
+    <div class="hero-glow-b"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge"><span class="badge-dot"></span>V6.0 · 双版本正式发布</div>
+        <h1 class="hero-title"><span class="title-grad">课堂点名计时器</span></h1>
+        <p class="hero-subtitle-cn">× 化学计时器</p>
+        <p class="hero-subtitle">Chemistry Timer · Classroom Edition</p>
+        <div class="scroll-container"><span class="scroll-text">为</span><span class="scroll-win"><span class="scroll-track"><span class="scroll-word"> 课堂教学 </span><span class="scroll-word"> 抽签点名 </span><span class="scroll-word"> 实验计时 </span><span class="scroll-word"> 大屏考试 </span><span class="scroll-word">演示场景</span><span class="scroll-word"> 学科融合 </span><span class="scroll-word"> 课堂教学 </span></span></span><span class="scroll-text">设计的课堂点名计时工具</span></div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" onclick="switchPage('download')">
+            <i class="fas fa-download"></i> 立即下载
+          </a>
+          <a class="btn btn-ghost" onclick="switchPage('features')">
+            <i class="fas fa-play-circle"></i> 查看功能
                         </a>
                     </div>
                 </div>
-
                 <div class="hero-visual">
-                    <div class="hero-img-container">
-                        <img src="pictures/主页.png" class="hero-img" alt="软件主界面" onerror="this.style.display='none'; document.getElementById('hero-fallback').style.display='block'">
-                        <div id="hero-fallback" class="app-preview-fallback" style="padding: 20px; border-radius: 12px;">
-                            <div style="height: 400px; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--text-secondary);">
-                                <i class="fas fa-image" style="font-size: 4rem; margin-bottom: 20px; color: var(--brand-primary);"></i>
-                                <p>图片加载中...</p>
-                                <p style="font-size: 0.8rem;">(pictures/主页.png)</p>
+        <div class="hero-img-wrap">
+          <img src="pictures/主页.png" class="hero-img" alt="主界面"
+            onerror="this.src='pictures/主界面.png'">
                             </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
     </section>
+<!-- FEATURES -->
+<section id="features" class="page">
+  <div class="feat-page">
 
-    <!-- 功能展示 (Features Section) -->
-    <section id="features" class="page-section">
-        
-        <!-- 核心功能板块 -->
-        <div class="features-hero">
-            <div class="core-feature-container">
-                <div class="core-feature-text">
-                    <span class="tag"><i class="fas fa-bolt"></i> 核心功能</span>
-                    <h2>可配置遥控随机抽签</h2>
-                    <p>打破传统点名限制，支持全局热键 Tab 随时唤起，完全不干扰 PPT 课件播放。内置防篡改机制，让课堂互动更公平、更高效。</p>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> 悬浮窗模式，兼容所有教学软件</li>
-                        <li><i class="fas fa-check-circle"></i> 支持名单批量导入与权重设置</li>
-                        <li><i class="fas fa-check-circle"></i> 自动记录历史，防止重复抽取</li>
+    <div class="sec-head">
+      <div class="sec-label">// FEATURES</div>
+      <h2 class="sec-title">全面升级的功能体系</h2>
+      <p class="sec-desc">V6.0 带来全新交互范式，从浮球到批注画布，从自动化引擎到时间岛，每一处都经过精心打磨。</p>
+    </div>
+
+    <!-- 核心：全局抽签视频 -->
+    <div class="core-block">
+      <div>
+        <div class="core-tag"><i class="fas fa-bolt"></i>&nbsp;核心功能</div>
+        <h3 class="core-title">可配置遥控<br>随机抽签</h3>
+        <p class="core-desc">打破传统点名限制，支持全局热键 Tab 随时唤起，完全不干扰 PPT 课件播放。内置防篡改权重算法，让课堂互动更公平、更高效。</p>
+        <ul class="core-list">
+          <li><i class="fas fa-check-circle"></i>悬浮窗模式，兼容所有教学软件</li>
+          <li><i class="fas fa-check-circle"></i>支持名单兼容导入与算法公平保障</li>
+          <li><i class="fas fa-check-circle"></i>自动记录历史，防止连续重复抽取</li>
+          <li><i class="fas fa-check-circle"></i>异步抽签窗口：屏幕中央弹出展示</li>
                     </ul>
                 </div>
-                <div class="core-feature-media">
-                    <div class="core-video-wrapper">
-                        <!-- 视频播放器 -->
-                        <video id="feature-video" class="core-video" autoplay loop muted playsinline>
-                            <source src="pictures/全局抽签.mp4" type="video/mp4">
-                            您的浏览器不支持视频标签。
+      <div class="video-wrap">
+        <video id="feat-video" class="feat-video" autoplay loop muted playsinline>
+          <source src="pictures/v6/全局抽签.mp4" type="video/mp4">
                         </video>
-                        <!-- 静音控制按钮 -->
-                        <button id="mute-toggle" class="mute-btn" title="开启/关闭声音">
-                            <i class="fas fa-volume-mute" id="mute-icon"></i>
+        <button class="mute-btn" id="muteBtn" title="开启/关闭声音">
+          <i class="fas fa-volume-mute" id="muteIcon"></i>
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- 其他功能网格 -->
-        <div class="features-grid-section">
-            <div class="section-header">
-                <h2>更多实用工具</h2>
-                <p style="color:var(--text-secondary)">专为化学实验室场景打造</p>
+    <!-- V6 新功能卡片 -->
+    <div class="sec-head">
+      <div class="sec-label">// V6.0 NEW</div>
+      <h2 class="sec-title">全新特性一览</h2>
+      <p class="sec-desc">V6.0 采用 PyQt5 全面重构，带来流畅动画、毛玻璃效果、高 DPI 自适应。相比 P5.0 稳定版，功能更强大、交互更现代。</p>
+            </div>
+    <div class="new-strip">
+      <div class="new-card">
+        <div class="new-icon ni-purple"><i class="fas fa-pen-nib"></i></div>
+        <div class="new-text">
+          <h4>制作中 · 浮球工具栏 <span class="new-badge">Making</span></h4>
+          <p>全屏批注工具支持多色画笔、橡皮擦、白板模式等批注功能。附快捷抽签按键</p>
+        </div>
+      </div>
+      <div class="new-card">
+        <div class="new-icon ni-amber"><i class="fas fa-robot"></i></div>
+        <div class="new-text">
+          <h4>制作中 · 自动化引擎 <span class="new-badge">Making</span></h4>
+          <p>可视化配置触发器与动作，倒计时结束后自动执行命令、抽签、切换主题等操作。</p>
+            </div>
+                    </div>
+      <div class="new-card">
+        <div class="new-icon ni-teal"><i class="fas fa-island-tropical"></i></div>
+        <div class="new-text">
+          <h4>时间岛 <span class="new-badge">NEW</span></h4>
+          <p>右上角置顶实时时钟，鼠标悬停自动淡出穿透，支持拖动定位与颜色自定义。</p>
+                    </div>
+                </div>
+      <div class="new-card">
+        <div class="new-icon ni-blue"><i class="fas fa-bolt"></i></div>
+        <div class="new-text">
+          <h4>异步抽签窗口 <span class="new-badge">NEW</span></h4>
+          <p>按下热键后，结果以精美动画弹窗在屏幕中央展示，蓝色流光环绕，自动淡出消失。</p>
+        </div>
+                    </div>
+      <div class="new-card">
+        <div class="new-icon ni-rose"><i class="fas fa-expand"></i></div>
+        <div class="new-text">
+          <h4>倒计时波纹特效 <span class="new-badge">NEW</span></h4>
+          <p>倒计时归零瞬间，红色辐射波纹从屏幕中央扩散，配合音效给予强烈视觉提示。</p>
+                    </div>
+                </div>
+      <div class="new-card">
+        <div class="new-icon ni-green"><i class="fas fa-clock"></i></div>
+        <div class="new-text">
+          <h4>PyQt5 全面重构 <span class="new-badge">NEW</span></h4>
+          <p>底层从 Tkinter 升级至 PyQt5，流畅动画、毛玻璃效果、高 DPI 自适应全面支持。</p>
+                    </div>
+                    </div>
+                </div>
+
+    <!-- 功能网格 -->
+    <div class="sec-head">
+      <div class="sec-label">// MORE TOOLS</div>
+      <h2 class="sec-title">更多实用工具</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-img-box">
+          <img src="pictures/p5/低干扰.png" class="feat-img" alt="低干扰"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="feat-fallback"><i class="fas fa-compress-alt"></i>低干扰模式</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-icon-row">
+            <div class="feat-icon"><i class="fas fa-circle"></i></div>
+            <span class="feat-name">悬浮球低干扰模式</span>
+                    </div>
+          <p class="feat-desc">不使用时自动缩为悬浮球，点击展开主窗口，支持置顶显示，随时待命不遮挡课件。</p>
+                    </div>
+                </div>
+      <div class="feat-card">
+        <div class="feat-img-box">
+          <img src="pictures/p5/随机抽签.png" class="feat-img" alt="随机抽签"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="feat-fallback"><i class="fas fa-dice"></i>随机抽签</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-icon-row">
+            <div class="feat-icon"><i class="fas fa-dice"></i></div>
+            <span class="feat-name">智能权重抽签</span>
+                    </div>
+          <p class="feat-desc">防篡改权重算法，被抽中后概率衰减，自动重置，确保点名绝对公平。</p>
+                    </div>
+                </div>
+      <div class="feat-card">
+        <div class="feat-img-box">
+          <img src="pictures/p5/全屏时钟.png" class="feat-img" alt="全屏时钟"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="feat-fallback"><i class="fas fa-clock"></i>全屏时钟</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-icon-row">
+            <div class="feat-icon"><i class="fas fa-clock"></i></div>
+            <span class="feat-name">沉浸式时钟</span>
+                    </div>
+          <p class="feat-desc">专为考试与实验设计的大屏时钟，清晰直观</p>
+                    </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-img-box">
+          <img src="pictures/p5/倒计时.png" class="feat-img" alt="倒计时"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="feat-fallback"><i class="fas fa-hourglass-half"></i>计时器</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-icon-row">
+            <div class="feat-icon"><i class="fas fa-hourglass-half"></i></div>
+            <span class="feat-name">双路精准计时</span>
+          </div>
+          <p class="feat-desc">正计时 A/B 双路并行，倒计时支持快速预设，归零时波纹特效+音效。</p>
+                </div>
+            </div>
+      <div class="feat-card">
+        <div class="feat-img-box">
+          <img src="pictures/p5/元素周期表.png" class="feat-img" alt="元素周期表"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="feat-fallback"><i class="fas fa-atom"></i>元素周期表</div>
+        </div>
+        <div class="feat-body">
+          <div class="feat-icon-row">
+            <div class="feat-icon"><i class="fas fa-atom"></i></div>
+            <span class="feat-name">化学工具箱</span>
+            </div>
+          <p class="feat-desc">集成高清元素周期表、相对原子质量查询及计算器，实验数据随手可得。</p>
+                    </div>
+                </div>
+      <div class="feat-card">
+        <div class="feat-img-box">
+          <img src="pictures/p5/设置.png" class="feat-img" alt="设置"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="feat-fallback"><i class="fas fa-cog"></i>个性设置</div>
+                    </div>
+        <div class="feat-body">
+          <div class="feat-icon-row">
+            <div class="feat-icon"><i class="fas fa-cog"></i></div>
+            <span class="feat-name">高度自定义</span>
+                    </div>
+          <p class="feat-desc">支持透明度、动画速度、热键、抽签速度等全面配置，亮色/暗色主题一键切换。</p>
+                </div>
+            </div>
+    </div><!-- /feat-grid -->
+  </div><!-- /feat-page -->
+</section><!-- /features -->
+<!-- DOWNLOAD -->
+<section id="download" class="page">
+  <div class="dl-page">
+    <div class="dl-hero">
+      <h1>选择版本</h1>
+      <p>所有版本完全免费 &amp; 开源 · MIT License</p>
+      <p style="font-size:0.9rem;color:var(--c-muted);margin-top:16px;">
+        <strong>V6.0 测试版</strong>：功能最新、交互最现代 | <strong>P5.0 正式版</strong>：经过充分测试、运行稳定
+      </p>
+    </div>
+    <div class="dl-grid">
+
+      <!-- 测试版 V6 -->
+      <div class="dl-card">
+        <div class="dl-rec">最新版本 · 建议下载</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <img src="pictures/v6.png" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
+          <span class="chip chip-beta">BETA</span>
+        </div>
+        <h3>课堂点名计时器</h3>
+        <p class="dl-ver">V6.0 · PyQt5 · Windows x64</p>
+        <ul class="dl-features">
+          <li><i class="fas fa-check"></i>全新 PyQt5 架构，流畅动画</li>
+          <li><i class="fas fa-check"></i>多种算法全方位升级</li>
+          <li><i class="fas fa-check"></i>可视化自动化引擎</li>
+          <li><i class="fas fa-check"></i>软件内名单维护系统</li>
+          <li><i class="fas fa-check"></i>波纹特效 + 音效</li>
+          <li><i class="fas fa-check"></i>毛玻璃效果、高 DPI 自适应</li>
+        </ul>
+        <a class="btn btn-dl" href="https://wwbco.lanzouu.com/ikxBQ3la9x7e" target="_blank">
+          <i class="fas fa-download"></i> 蓝奏云下载（密码:0000）
+        </a>
+      </div>
+
+      <!-- 正式版 P5 -->
+      <div class="dl-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <img src="pictures/p5.png" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
+          <span class="chip chip-stable">STABLE</span>
+        </div>
+        <h3>化学计时器</h3>
+        <p class="dl-ver">P5.0 · Tkinter · Windows x64/x32</p>
+        <ul class="dl-features">
+          <li><i class="fas fa-check"></i>样式简单专一</li>
+          <li><i class="fas fa-check"></i>安装即用，无需安装环境</li>
+          <li><i class="fas fa-check"></i>包含完整素材与名单</li>
+          <li><i class="fas fa-check"></i>全局热键抽签 + 元素周期表</li>
+          <li><i class="fas fa-check"></i>多路计时器 + 全屏时钟</li>
+          <li><i class="fas fa-check"></i>轻量级、低资源占用</li>
+        </ul>
+        <a class="btn btn-dl" href="https://wwqc.lanzouu.com/itGIt3ag1f0b" target="_blank">
+          <i class="fas fa-download"></i> 蓝奏云下载（密码:0000）
+        </a>
             </div>
             
-            <div class="feature-grid">
-                
-                <!-- 新增：低干扰界面 -->
-                <div class="feature-card">
-                    <div class="feature-img-box">
-                        <img src="pictures/低干扰.png" class="feature-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="feature-fallback"><i class="fas fa-compress-alt"></i><span>低干扰模式</span></div>
-                    </div>
-                    <div class="feature-text">
-                        <h3>低干扰界面</h3>
-                        <p>独特的“悬浮球”模式设计，在不使用时自动缩小，确保不遮挡课件内容。支持窗口置顶，随时待命。</p>
-                    </div>
-                </div>
-
-                <!-- 功能 1 -->
-                <div class="feature-card">
-                    <div class="feature-img-box">
-                        <img src="pictures/随机抽签.png" class="feature-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="feature-fallback"><i class="fas fa-dice"></i><span>随机抽签界面</span></div>
-                    </div>
-                    <div class="feature-text">
-                        <h3>智能权重抽签</h3>
-                        <p>内置防篡改机制与惩罚权重算法，确保点名公平性。支持名单快速导入与恢复。</p>
-                    </div>
-                </div>
-
-                <!-- 功能 2 -->
-                <div class="feature-card">
-                    <div class="feature-img-box">
-                        <img src="pictures/全屏时钟.png" class="feature-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="feature-fallback"><i class="fas fa-clock"></i><span>全屏时钟界面</span></div>
-                    </div>
-                    <div class="feature-text">
-                        <h3>沉浸式时钟</h3>
-                        <p>专为考试与实验设计的大屏显示模式，清晰直观，避免学生分心。</p>
-                    </div>
-                </div>
-
-                <!-- 功能 3 -->
-                <div class="feature-card">
-                    <div class="feature-img-box">
-                        <img src="pictures/倒计时.png" class="feature-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="feature-fallback"><i class="fas fa-hourglass-half"></i><span>双路计时界面</span></div>
-                    </div>
-                    <div class="feature-text">
-                        <h3>多路精准计时</h3>
-                        <p>支持正计时与倒计时并行运行，最长支持99小时记录，满足长周期实验需求。</p>
-                    </div>
-                </div>
-
-                <!-- 功能 4 -->
-                <div class="feature-card">
-                    <div class="feature-img-box">
-                        <img src="pictures/元素周期表.png" class="feature-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="feature-fallback"><i class="fas fa-atom"></i><span>元素周期表界面</span></div>
-                    </div>
-                    <div class="feature-text">
-                        <h3>化学工具箱</h3>
-                        <p>集成高清元素周期表、相对原子质量查询及化学计算器，实验数据随手可得。</p>
-                    </div>
-                </div>
-
-                <!-- 功能 5 -->
-                <div class="feature-card">
-                    <div class="feature-img-box">
-                        <img src="pictures/设置.png" class="feature-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                        <div class="feature-fallback"><i class="fas fa-cog"></i><span>个性化设置界面</span></div>
-                    </div>
-                    <div class="feature-text">
-                        <h3>高度自定义</h3>
-                        <p>支持界面置顶、字体调整、颜色主题切换以及声音提醒设置，完全适应您的教学习惯。</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 下载中心 (Download Section) -->
-    <section id="download" class="page-section">
-        <div class="download-page-content">
-            <div style="margin-bottom: 60px;">
-                <h2 style="font-size:2.5rem; margin-bottom:16px;">选择你的版本</h2>
-                <p style="color:var(--text-secondary);">所有版本均完全免费且开源</p>
-            </div>
-
-            <div class="download-grid">
-                <div class="download-option" onclick="window.open('https://wwqc.lanzouu.com/itGIt3ag1f0b', '_blank')">
-                    <div class="badge-rec">推荐</div>
-                    <div style="font-size:3rem; color:var(--brand-primary); margin-bottom:20px;">
-                        <i class="fab fa-windows"></i>
-                    </div>
-                    <h3>Windows 发行版</h3>
-                    <p style="color:var(--text-secondary); margin:10px 0;">v5.0 Preview (x64)</p>
-                    <ul style="text-align:left; color:var(--text-secondary); margin:20px 0; padding-left:20px;">
-                        <li>无需安装 Python 环境</li>
-                        <li>解压即用 (Portable)</li>
-                        <li>包含完整素材包</li>
-                    </ul>
-                    <button class="btn btn-primary" style="width:100%; justify-content:center;">
-                        <i class="fas fa-download"></i> 蓝奏云下载 (密码:0000)
-                    </button>
-                </div>
-
-                <div class="download-option" onclick="window.open('https://github.com/SuangSue/Chemistry_timer', '_blank')">
-                    <div style="font-size:3rem; color:var(--text-main); margin-bottom:20px;">
-                        <i class="fab fa-github"></i>
-                    </div>
-                    <h3>源代码</h3>
-                    <p style="color:var(--text-secondary); margin:10px 0;">Python / Tkinter</p>
-                    <div style="text-align:center; color:var(--text-secondary); margin:20px 0; line-height: 1.6;">
-                        <p>如果您觉得这个项目对您有帮助，</p>
-                        <p>请在 GitHub 上点亮一颗星 <span style="color:#eab308">⭐</span></p>
-                        <p>您的支持是我们更新的动力！</p>
-                    </div>
-                    <button class="btn btn-outline" style="width:100%; justify-content:center;">
-                        <i class="fas fa-code-branch"></i> 前往 GitHub
-                    </button>
-                </div>
-            </div>
-            
-            <p style="color:var(--text-light); font-size:0.9rem;">
-                * MacOS 和 Linux 用户建议使用源码运行。<br>
-                由 <span style="color:var(--brand-primary)">SuangSue</span> 开发设计
+    </div><!-- /dl-grid -->
+    <p class="dl-note">
+      * V6.0 为测试版，部分非核心功能维护中；P5.0 为稳定正式版。<br>
+      <br>
+       <a href="https://github.com/SuangSue" target="_blank">SuangSue</a>
             </p>
         </div>
     </section>
 
-    <!-- 全局页脚 -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="logo" style="font-size:1rem; opacity:0.8;">
-                <i class="fas fa-flask"></i> 化学计时器
-            </div>
+  <div class="footer-inner">
+    <div class="footer-logo"><i class="fas fa-flask"></i> 化学计时器</div>
             <div class="footer-links">
-                <a href="#" onclick="switchPage('home'); return false;">主页</a>
-                <a href="#" onclick="switchPage('features'); return false;">功能展示</a>
-                <a href="#" onclick="switchPage('download'); return false;">下载中心</a>
+      <a href="#" onclick="switchPage('home');return false">主页</a>
+      <a href="#" onclick="switchPage('features');return false">功能展示</a>
+      <a href="#" onclick="switchPage('download');return false">下载中心</a>
                 <a href="https://github.com/SuangSue/Chemistry_timer" target="_blank">GitHub</a>
             </div>
-            <div class="copyright">
-                &copy; 2024-2025 SuangSue. MIT License. <br>
-                Designed for Chemistry Education.
-            </div>
+    <span class="footer-copy">© 2024-2026 SuangSue · MIT License</span>
         </div>
     </footer>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            /* === 页面切换逻辑 === */
-            const navLinks = document.querySelectorAll('.nav-link[data-target]');
-            const sections = document.querySelectorAll('.page-section');
-            const progressBar = document.getElementById('page-progress');
+(function(){
+  var pages    = document.querySelectorAll('.page');
+  var navLinks = document.querySelectorAll('.nav-link[data-page]');
+  var prog     = document.getElementById('prog');
 
-            window.switchPage = function(targetId) {
-                // 进度条动画
-                progressBar.style.width = '100%';
-                
-                setTimeout(() => {
-                    // 切换 Section
-                    sections.forEach(sec => {
-                        sec.classList.remove('active');
-                        if(sec.id === targetId) {
-                            sec.classList.add('active');
-                            window.scrollTo(0, 0);
-                        }
-                    });
+  window.switchPage = function(id){
+    prog.style.width = '70%';
+    setTimeout(function(){
+      pages.forEach(function(p){ p.classList.remove('active'); });
+      navLinks.forEach(function(l){ l.classList.remove('active'); });
+      var t = document.getElementById(id);
+      if(t){ t.classList.add('active'); window.scrollTo(0,0); }
+      var lk = document.querySelector('.nav-link[data-page="'+id+'"]');
+      if(lk) lk.classList.add('active');
+      prog.style.width = '100%';
+      setTimeout(function(){
+        prog.style.opacity='0';
+        setTimeout(function(){ prog.style.width='0'; prog.style.opacity='1'; },200);
+      },300);
+    },320);
+  };
 
-                    // 更新导航状态
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if(link.dataset.target === targetId) {
-                            link.classList.add('active');
-                        }
-                    });
-
-                    // 进度条重置
-                    setTimeout(() => {
-                        progressBar.style.opacity = '0';
-                        setTimeout(() => {
-                            progressBar.style.width = '0%';
-                            progressBar.style.opacity = '1';
-                        }, 200);
-                    }, 200);
-
-                }, 300);
-            };
-
-            // 绑定导航点击
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
+  navLinks.forEach(function(l){
+    l.addEventListener('click',function(e){
                     e.preventDefault();
-                    switchPage(link.dataset.target);
+      switchPage(l.dataset.page);
                 });
             });
 
-            /* === 主题切换 === */
-            const themeBtn = document.getElementById('themeToggle');
-            const themeIcon = themeBtn.querySelector('i');
-            const html = document.documentElement;
+  var html      = document.documentElement;
+  var themeBtn  = document.getElementById('themeBtn');
+  var themeIcon = document.getElementById('themeIcon');
+  var saved     = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+  updateThemeIcon(saved);
 
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            html.setAttribute('data-theme', savedTheme);
-            updateIcon(savedTheme);
-
-            themeBtn.addEventListener('click', () => {
-                const current = html.getAttribute('data-theme');
-                const next = current === 'light' ? 'dark' : 'light';
+  themeBtn.addEventListener('click',function(){
+    var cur  = html.getAttribute('data-theme');
+    var next = cur==='dark' ? 'light' : 'dark';
                 html.setAttribute('data-theme', next);
                 localStorage.setItem('theme', next);
-                updateIcon(next);
-            });
+    updateThemeIcon(next);
+  });
 
-            function updateIcon(theme) {
-                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            }
+  function updateThemeIcon(t){
+    themeIcon.className = t==='dark' ? 'fas fa-sun' : 'fas fa-moon';
+  }
 
-            /* === 视频静音控制 === */
-            const video = document.getElementById('feature-video');
-            const muteBtn = document.getElementById('mute-toggle');
-            const muteIcon = document.getElementById('mute-icon');
-
-            if(video && muteBtn) {
-                muteBtn.addEventListener('click', () => {
+  var video    = document.getElementById('feat-video');
+  var muteBtn  = document.getElementById('muteBtn');
+  var muteIcon = document.getElementById('muteIcon');
+  if(video && muteBtn){
+    muteBtn.addEventListener('click',function(){
                     video.muted = !video.muted;
-                    if(video.muted) {
-                        muteIcon.className = 'fas fa-volume-mute';
-                        muteBtn.style.background = 'rgba(0,0,0,0.6)';
-                    } else {
-                        muteIcon.className = 'fas fa-volume-up';
-                        muteBtn.style.background = 'var(--brand-primary)';
-                    }
-                });
-            }
-        });
+      muteIcon.className = video.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+      muteBtn.style.background = video.muted ? 'rgba(0,0,0,.65)' : 'rgba(91,156,246,.85)';
+    });
+  }
+
+  document.querySelectorAll('.feat-img').forEach(function(img){
+    img.style.opacity='0';
+    img.style.transition='opacity .5s';
+    if(img.complete){ img.style.opacity='1'; }
+    else { img.addEventListener('load',function(){ img.style.opacity='1'; }); }
+  });
+
+})();
     </script>
 </body>
 </html>
