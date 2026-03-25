@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>化学计时器 - Chemistry Timer</title>
+    <meta name="description" content="课堂点名计时器 · 化学计时器 —— 面向教师的课堂工具，支持随机抽签、倒计时、全屏时钟等功能，完全免费开源。">
+    <meta name="keywords" content="化学计时器,课堂点名,随机抽签,倒计时,计时器">
+    <meta property="og:title" content="化学计时器 - Chemistry Timer">
+    <meta property="og:description" content="面向教师的课堂工具，支持随机抽签、倒计时、全屏时钟等功能。">
+    <meta property="og:image" content="https://chemistrytimer.top/pictures/hero-main.png">
+    <meta property="og:url" content="https://chemistrytimer.top">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="pictures/logo.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,14 +19,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
 :root{
---c-bg:#08080f;--c-surface:#0f0f1a;--c-card:#14141f;
---c-border:rgba(255,255,255,0.07);--c-border-hi:rgba(255,255,255,0.13);
---c-text:#eeedf8;--c-muted:#7874a0;--c-faint:#2a2a40;
+--c-bg:#070b14;--c-surface:#0c1120;--c-card:#111827;
+--c-border:rgba(99,130,255,0.1);--c-border-hi:rgba(99,130,255,0.18);
+--c-text:#e8eaf6;--c-muted:#7986b8;--c-faint:#1e2a45;
 --c-blue:#5b9cf6;--c-purple:#a07aff;--c-teal:#2dd4bf;
 --c-amber:#f6a832;--c-rose:#f4506a;--c-green:#34d974;
 --grad-brand:linear-gradient(135deg,#5b9cf6 0%,#a07aff 100%);
---shadow-card:0 0 0 1px rgba(255,255,255,0.06),0 12px 40px rgba(0,0,0,0.6);
---shadow-glow:0 0 60px rgba(91,156,246,0.18);--r-card:18px;
+--shadow-card:0 0 0 1px rgba(99,130,255,0.1),0 12px 40px rgba(0,0,10,0.7);
+--shadow-glow:0 0 60px rgba(91,156,246,0.22);--r-card:18px;
 }
 [data-theme="light"]{
 --c-bg:#f4f3fc;--c-surface:#eae9f5;--c-card:#fff;
@@ -33,6 +41,12 @@ body{font-family:"Space Grotesk","Noto Sans SC",sans-serif;
 background:var(--c-bg);color:var(--c-text);line-height:1.6;
 overflow-x:hidden;transition:background .3s,color .3s;
 min-height:100vh;display:flex;flex-direction:column;}
+/* 暗色模式背景渐变 */
+body:not([data-theme="light"] body){background:var(--c-bg);}
+html:not([data-theme="light"]) body{
+background:radial-gradient(ellipse 120% 60% at 60% -10%,rgba(91,156,246,0.07) 0%,transparent 60%),
+radial-gradient(ellipse 80% 50% at -10% 80%,rgba(160,122,255,0.06) 0%,transparent 55%),
+var(--c-bg);}
 #prog{position:fixed;top:0;left:0;height:2px;width:0%;z-index:9999;
 background:var(--grad-brand);transition:width .35s,opacity .2s;}
 .nav{position:fixed;top:0;width:100%;height:64px;z-index:1000;
@@ -69,10 +83,10 @@ background-image:linear-gradient(var(--c-border) 1px,transparent 1px),linear-gra
 background-size:56px 56px;
 mask-image:radial-gradient(ellipse 80% 55% at 50% 0%,black,transparent 80%);}
 .hero-glow-a{position:absolute;width:700px;height:700px;border-radius:50%;
-background:radial-gradient(circle,rgba(91,156,246,.15) 0%,transparent 65%);
+background:radial-gradient(circle,rgba(91,156,246,.2) 0%,transparent 65%);
 top:-200px;left:-150px;pointer-events:none;}
 .hero-glow-b{position:absolute;width:600px;height:600px;border-radius:50%;
-background:radial-gradient(circle,rgba(160,122,255,.13) 0%,transparent 65%);
+background:radial-gradient(circle,rgba(160,122,255,.17) 0%,transparent 65%);
 bottom:-100px;right:-80px;pointer-events:none;}
 .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:80px 28px;
 display:grid;grid-template-columns:1fr 1.15fr;gap:72px;align-items:center;width:100%;}
@@ -251,6 +265,24 @@ color:var(--c-text);border:1px solid var(--c-border-hi);}
 .dl-note{text-align:center;color:var(--c-muted);font-size:.88rem;line-height:1.7;}
 .dl-note a{color:var(--c-blue);text-decoration:none;}
 .dl-note a:hover{text-decoration:underline;}
+/* Changelog 时间线 */
+.cl-wrap{position:relative;padding-left:28px;}
+.cl-wrap::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--c-border-hi);}
+.cl-item{position:relative;margin-bottom:36px;}
+.cl-item-last{margin-bottom:0;}
+.cl-dot{position:absolute;left:-25px;top:6px;width:15px;height:15px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px var(--c-bg);}
+.cl-body{padding-left:4px;}
+.cl-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.cl-ver{font-family:"JetBrains Mono",monospace;font-size:.95rem;font-weight:700;color:var(--c-text);}
+.cl-tag{font-family:"JetBrains Mono",monospace;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:4px;border:1px solid;}
+.cl-date{font-family:"JetBrains Mono",monospace;font-size:.75rem;color:var(--c-muted);margin-left:auto;}
+/* Changelog 滚动入场动画 */
+.cl-item{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(0.22,1,0.36,1),transform .6s cubic-bezier(0.22,1,0.36,1);}
+.cl-item.cl-visible{opacity:1;transform:translateY(0);}
+.cl-item:nth-child(2){transition-delay:.1s;}
+.cl-item:nth-child(3){transition-delay:.2s;}
+.cl-item:nth-child(4){transition-delay:.3s;}
+.cl-item:nth-child(5){transition-delay:.4s;}
 .footer{background:var(--c-surface);border-top:1px solid var(--c-border);padding:32px 28px;margin-top:auto;}
 .footer-inner{max-width:1280px;margin:0 auto;
 display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
@@ -260,14 +292,112 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
 .footer-links a{color:var(--c-muted);text-decoration:none;font-size:.88rem;transition:color .2s;}
 .footer-links a:hover{color:var(--c-text);}
 .footer-copy{color:var(--c-faint);font-size:.8rem;}
+/* 汉堡菜单 */
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;
+width:38px;height:38px;border-radius:10px;border:none;background:transparent;
+cursor:pointer;padding:8px;}
+.hamburger span{display:block;height:2px;border-radius:2px;background:var(--c-muted);transition:all .3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;z-index:999;
+background:var(--c-surface);border-bottom:1px solid var(--c-border);
+padding:12px 20px 16px;flex-direction:column;gap:4px;
+backdrop-filter:blur(24px);animation:pgIn .25s ease;}
+.mobile-menu.open{display:flex;}
+.mobile-menu-link{padding:11px 16px;border-radius:10px;text-decoration:none;
+color:var(--c-muted);font-size:.95rem;font-weight:500;transition:all .2s;cursor:pointer;}
+.mobile-menu-link:hover,.mobile-menu-link.active{color:var(--c-text);background:rgba(255,255,255,.06);}
+[data-theme="light"] .mobile-menu-link:hover,[data-theme="light"] .mobile-menu-link.active{background:rgba(0,0,0,.05);}
+/* 回到顶部 */
+#back-top{position:fixed;bottom:32px;right:32px;width:44px;height:44px;
+border-radius:50%;border:1px solid var(--c-border-hi);background:var(--c-card);
+color:var(--c-muted);display:flex;align-items:center;justify-content:center;
+cursor:pointer;font-size:1rem;opacity:0;pointer-events:none;
+transition:all .3s cubic-bezier(0.22,1,0.36,1);z-index:900;
+box-shadow:0 4px 20px rgba(0,0,0,.3);}
+#back-top.visible{opacity:1;pointer-events:auto;}
+#back-top:hover{color:var(--c-text);border-color:var(--c-blue);background:rgba(91,156,246,.12);transform:translateY(-3px);}
+/* 帮助页目录 */
+.help-toc{background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--r-card);padding:20px 16px;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto;flex-shrink:0;width:200px;align-self:flex-start;}
+.help-toc-title{font-size:.75rem;font-weight:700;color:var(--c-muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.help-toc-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px;}
+.help-toc-list li a{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:var(--c-muted);font-size:.85rem;text-decoration:none;transition:all .2s;cursor:pointer;border:none;background:transparent;white-space:nowrap;}
+.help-toc-list li a:hover{color:var(--c-text);background:var(--c-faint);}
+.help-toc-list li a.toc-active{color:var(--c-blue);background:rgba(91,156,246,.1);font-weight:600;}
+.help-toc-icon{font-size:.9rem;flex-shrink:0;}
+.help-toc-icon{font-size:.9rem;}
+/* FAQ 分组标题 */
+.help-faq-group-title{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--c-muted);padding:6px 0 10px;border-bottom:1px solid var(--c-border);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+/* 已知问题标签对齐 */
+.help-faq-q{gap:10px;}
+/* 帮助页 */
+.help-page{max-width:1100px;margin:0 auto;padding:56px 28px 100px;display:flex;gap:40px;align-items:flex-start;}
+.help-page .help-toc{order:-1;}
+.help-page-content{flex:1;min-width:0;}
+.help-banner{background:linear-gradient(135deg,rgba(91,156,246,0.12) 0%,rgba(160,122,255,0.10) 100%);
+border:1px solid rgba(91,156,246,0.2);border-radius:var(--r-card);
+padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-align:center;}
+.help-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad-brand);}
+.help-banner-icon{font-size:2rem;margin-bottom:12px;display:block;}
+.help-banner h2{font-family:"Noto Sans SC",sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:8px;}
+.help-banner p{color:var(--c-muted);font-size:.9rem;line-height:1.7;}
+.help-banner a{color:var(--c-blue);text-decoration:none;font-weight:600;border-bottom:1px solid rgba(91,156,246,.3);transition:border-color .2s;}
+.help-banner a:hover{border-color:var(--c-blue);}
+.help-section{margin-bottom:56px;}
+.help-section-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--c-border);}
+.help-section-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.hsi-blue{background:rgba(91,156,246,.15);}
+.hsi-purple{background:rgba(160,122,255,.15);}
+.hsi-teal{background:rgba(45,212,191,.15);}
+.hsi-amber{background:rgba(246,168,50,.15);}
+.hsi-rose{background:rgba(244,80,106,.15);}
+.hsi-green{background:rgba(52,217,116,.15);}
+.help-section-header h3{font-family:"Noto Sans SC",sans-serif;font-size:1.25rem;font-weight:800;}
+.help-section-header span{font-size:.78rem;color:var(--c-muted);font-family:"JetBrains Mono",monospace;margin-top:2px;display:block;}
+.help-steps{display:flex;flex-direction:column;gap:14px;}
+.help-step{display:flex;gap:16px;align-items:flex-start;background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:18px 20px;transition:border-color .25s,transform .25s;}
+.help-step:hover{border-color:var(--c-border-hi);transform:translateX(4px);}
+.help-step-num{width:28px;height:28px;border-radius:50%;background:var(--grad-brand);color:#fff;font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-family:"JetBrains Mono",monospace;}
+.help-step-body h4{font-size:.95rem;font-weight:700;margin-bottom:5px;}
+.help-step-body p{font-size:.88rem;color:var(--c-muted);line-height:1.7;margin:0;}
+.help-tip{display:flex;gap:12px;align-items:flex-start;background:rgba(246,168,50,.08);border:1px solid rgba(246,168,50,.2);border-radius:10px;padding:13px 16px;margin-top:12px;}
+.help-tip i{color:var(--c-amber);margin-top:2px;flex-shrink:0;}
+.help-tip p{font-size:.85rem;color:var(--c-muted);line-height:1.65;margin:0;}
+.help-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.help-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:20px;transition:all .25s;}
+.help-card:hover{border-color:var(--c-border-hi);transform:translateY(-3px);box-shadow:var(--shadow-card);}
+.help-card-icon{font-size:1.5rem;margin-bottom:10px;}
+.help-card h4{font-size:.95rem;font-weight:700;margin-bottom:6px;}
+.help-card p{font-size:.85rem;color:var(--c-muted);line-height:1.65;}
+.help-kbd{display:inline-block;padding:2px 8px;border-radius:5px;background:var(--c-faint);border:1px solid var(--c-border-hi);font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--c-text);margin:0 2px;}
+.help-tag{display:inline-flex;padding:2px 8px;border-radius:5px;font-family:"JetBrains Mono",monospace;font-size:.68rem;font-weight:700;margin-left:6px;vertical-align:middle;}
+.ht-blue{background:rgba(91,156,246,.12);color:var(--c-blue);border:1px solid rgba(91,156,246,.25);}
+.ht-green{background:rgba(52,217,116,.12);color:var(--c-green);border:1px solid rgba(52,217,116,.25);}
+.ht-amber{background:rgba(246,168,50,.12);color:var(--c-amber);border:1px solid rgba(246,168,50,.25);}
+.help-divider{height:1px;background:var(--c-border);margin:40px 0;}
+.help-faq{display:flex;flex-direction:column;gap:10px;}
+.help-faq-item{background:var(--c-card);border:1px solid var(--c-border);border-radius:12px;overflow:hidden;transition:border-color .2s;}
+.help-faq-item:hover{border-color:var(--c-border-hi);}
+.help-faq-q{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;cursor:pointer;gap:12px;}
+.help-faq-q span{font-size:.93rem;font-weight:600;}
+.help-faq-q i{color:var(--c-muted);transition:transform .3s;flex-shrink:0;}
+.help-faq-item.open .help-faq-q i{transform:rotate(180deg);}
+.help-faq-a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(0.22,1,0.36,1);}
+.help-faq-a-inner{padding:0 20px 16px;color:var(--c-muted);font-size:.88rem;line-height:1.75;border-top:1px solid var(--c-border);padding-top:14px;}
+.help-faq-item.open .help-faq-a{max-height:300px;}
+@media(max-width:968px){.help-banner{padding:20px 20px;}.help-page{padding:24px 16px 80px;flex-direction:column;gap:0;}.help-toc{position:static;width:100%;max-height:none;padding:14px 16px;margin-bottom:24px;border-radius:12px;}.help-toc-list{flex-direction:row;flex-wrap:wrap;gap:6px;}.help-toc-list li a{padding:5px 12px;border-radius:20px;border:1px solid var(--c-border);background:var(--c-faint);font-size:.8rem;}.help-toc-list li a.toc-active{border-color:var(--c-blue);background:rgba(91,156,246,.12);}}
+@media(max-width:968px){.help-section-header h3{font-size:1.1rem;}}
 @media(max-width:968px){
 .hero-inner{grid-template-columns:1fr;gap:40px;padding:48px 20px;}
 .hero-img-wrap::after{display:none;}
 .float-tag-a,.float-tag-b{display:none;}
 .nav-links{display:none;}
+.hamburger{display:flex;}
 .core-block{grid-template-columns:1fr;padding:24px;}
 .dl-grid{grid-template-columns:1fr;}
 .footer-inner{flex-direction:column;text-align:center;}
+#back-top{bottom:20px;right:20px;}
         }
     </style>
 </head>
@@ -283,6 +413,7 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
       <a class="nav-link active" data-page="home" onclick="switchPage('home')">主页</a>
       <a class="nav-link" data-page="features" onclick="switchPage('features')">功能展示</a>
       <a class="nav-link" data-page="download" onclick="switchPage('download')">下载中心</a>
+      <a class="nav-link" data-page="help" onclick="switchPage('help')">帮助与反馈</a>
             </div>
             <div class="nav-right">
       <a class="icon-btn" href="https://github.com/SuangSue/Chemistry_timer" target="_blank" title="GitHub">
@@ -291,9 +422,19 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
       <button class="icon-btn" id="themeBtn" title="切换主题">
         <i class="fas fa-moon" id="themeIcon"></i>
                 </button>
+      <button class="hamburger" id="hamburger" title="菜单" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </button>
             </div>
         </div>
     </nav>
+<!-- 移动端菜单 -->
+<div class="mobile-menu" id="mobileMenu">
+  <a class="mobile-menu-link active" data-page="home" onclick="switchPage('home');closeMobileMenu()">主页</a>
+  <a class="mobile-menu-link" data-page="features" onclick="switchPage('features');closeMobileMenu()">功能展示</a>
+  <a class="mobile-menu-link" data-page="download" onclick="switchPage('download');closeMobileMenu()">下载中心</a>
+  <a class="mobile-menu-link" data-page="help" onclick="switchPage('help');closeMobileMenu()">帮助与反馈</a>
+</div>
 
 <!-- HOME -->
 <section id="home" class="page active">
@@ -314,8 +455,11 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
           </a>
           <a class="btn btn-ghost" onclick="switchPage('features')">
             <i class="fas fa-play-circle"></i> 查看功能
-                        </a>
-                    </div>
+          </a>
+          <a class="btn btn-ghost" onclick="switchPage('help')">
+            <i class="fas fa-book-open"></i> 使用教程
+          </a>
+        </div>
                 </div>
                 <div class="hero-visual">
         <div class="hero-img-wrap">
@@ -351,7 +495,7 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
                     </ul>
                 </div>
       <div class="video-wrap">
-        <video id="feat-video" class="feat-video" autoplay loop muted playsinline>
+        <video id="feat-video" class="feat-video" autoplay loop muted playsinline poster="pictures/v6/video-poster.png">
           <source src="pictures/v6/%E5%85%A8%E5%B1%80%E6%8A%BD%E7%AD%BE.mp4" type="video/mp4">
                         </video>
         <button class="mute-btn" id="muteBtn" title="开启/关闭声音">
@@ -419,50 +563,50 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
     <div class="feat-grid">
       <div class="feat-card">
         <div class="feat-img-box">
-          <img src="pictures/p5/low-distraction.png" class="feat-img" alt="低干扰"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="pictures/v6/low-distraction.png" class="feat-img" alt="低干扰" loading="lazy"
+            onerror="this.src='pictures/p5/low-distraction.png'">
           <div class="feat-fallback"><i class="fas fa-compress-alt"></i>低干扰模式</div>
         </div>
         <div class="feat-body">
           <div class="feat-icon-row">
             <div class="feat-icon"><i class="fas fa-circle"></i></div>
             <span class="feat-name">悬浮球低干扰模式</span>
-                    </div>
+          </div>
           <p class="feat-desc">不使用时自动缩为悬浮球，点击展开主窗口，支持置顶显示，随时待命不遮挡课件。</p>
-                    </div>
-                </div>
+        </div>
+      </div>
       <div class="feat-card">
         <div class="feat-img-box">
-          <img src="pictures/p5/random-pick.png" class="feat-img" alt="随机抽签"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="pictures/v6/random-pick.png" class="feat-img" alt="随机抽签" loading="lazy"
+            onerror="this.src='pictures/p5/random-pick.png'">
           <div class="feat-fallback"><i class="fas fa-dice"></i>随机抽签</div>
         </div>
         <div class="feat-body">
           <div class="feat-icon-row">
             <div class="feat-icon"><i class="fas fa-dice"></i></div>
             <span class="feat-name">智能权重抽签</span>
-                    </div>
+          </div>
           <p class="feat-desc">防篡改权重算法，被抽中后概率衰减，自动重置，确保点名绝对公平。</p>
-                    </div>
-                </div>
+        </div>
+      </div>
       <div class="feat-card">
         <div class="feat-img-box">
-          <img src="pictures/p5/fullscreen-clock.png" class="feat-img" alt="全屏时钟"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="pictures/v6/fullscreen-clock.png" class="feat-img" alt="全屏时钟" loading="lazy"
+            onerror="this.src='pictures/p5/fullscreen-clock.png'">
           <div class="feat-fallback"><i class="fas fa-clock"></i>全屏时钟</div>
         </div>
         <div class="feat-body">
           <div class="feat-icon-row">
             <div class="feat-icon"><i class="fas fa-clock"></i></div>
             <span class="feat-name">沉浸式时钟</span>
-                    </div>
+          </div>
           <p class="feat-desc">专为考试与实验设计的大屏时钟，清晰直观</p>
-                    </div>
+        </div>
       </div>
       <div class="feat-card">
         <div class="feat-img-box">
-          <img src="pictures/p5/countdown.png" class="feat-img" alt="倒计时"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="pictures/v6/countdown.png" class="feat-img" alt="倒计时" loading="lazy"
+            onerror="this.src='pictures/p5/countdown.png'">
           <div class="feat-fallback"><i class="fas fa-hourglass-half"></i>计时器</div>
         </div>
         <div class="feat-body">
@@ -471,11 +615,11 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
             <span class="feat-name">双路精准计时</span>
           </div>
           <p class="feat-desc">正计时 A/B 双路并行，倒计时支持快速预设，归零时波纹特效+音效。</p>
-                </div>
-            </div>
+        </div>
+      </div>
       <div class="feat-card">
         <div class="feat-img-box">
-          <img src="pictures/p5/periodic-table.png" class="feat-img" alt="元素周期表"
+          <img src="pictures/p5/periodic-table.png" class="feat-img" alt="元素周期表" loading="lazy"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="feat-fallback"><i class="fas fa-atom"></i>元素周期表</div>
         </div>
@@ -489,7 +633,7 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
                 </div>
       <div class="feat-card">
         <div class="feat-img-box">
-          <img src="pictures/p5/settings.png" class="feat-img" alt="设置"
+          <img src="pictures/p5/settings.png" class="feat-img" alt="设置" loading="lazy"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="feat-fallback"><i class="fas fa-cog"></i>个性设置</div>
                     </div>
@@ -520,7 +664,7 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
       <div class="dl-card">
         <div class="dl-rec">最新版本 · 建议下载</div>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-          <img src="pictures/v6.png" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
+          <img src="pictures/v6.png" style="width:48px;height:48px;border-radius:12px;object-fit:contain;" onerror="this.style.display='none'">
           <span class="chip chip-beta">BETA</span>
         </div>
         <h3>课堂点名计时器</h3>
@@ -541,7 +685,7 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
       <!-- 正式版 P5 -->
       <div class="dl-card">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-          <img src="pictures/p5.png" style="width:48px;height:48px;border-radius:12px;object-fit:contain;">
+          <img src="pictures/p5.png" style="width:48px;height:48px;border-radius:12px;object-fit:contain;" onerror="this.style.display='none'">
           <span class="chip chip-stable">STABLE</span>
         </div>
         <h3>化学计时器</h3>
@@ -560,6 +704,50 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
             </div>
             
     </div><!-- /dl-grid -->
+
+    <!-- Changelog 时间线 -->
+    <div style="margin-top:64px;">
+      <div class="sec-label">// CHANGELOG</div>
+      <h2 class="sec-title" style="margin-bottom:8px;">版本历程</h2>
+      <p class="sec-desc" style="margin-bottom:40px;">从一节化学课的灵感，到双版本正式发布。</p>
+      <div class="cl-wrap">
+        <div class="cl-item">
+          <div class="cl-dot" style="background:var(--c-blue);"></div>
+          <div class="cl-body">
+            <div class="cl-head"><span class="cl-ver">V6.0</span><span class="cl-tag" style="background:rgba(246,168,50,.15);color:var(--c-amber);border-color:rgba(246,168,50,.3);">BETA</span><span class="cl-date">2025</span></div>
+            <p class="cl-desc">底层从 Tkinter 全面升级至 PyQt5，引入流畅动画与毛玻璃效果。抽签算法全面重构，新增自动化引擎、时间岛、异步抽签窗口、全屏批注画布、倒计时波纹特效，支持高 DPI 自适应与软件内名单维护。</p>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div class="cl-dot" style="background:var(--c-green);"></div>
+          <div class="cl-body">
+            <div class="cl-head"><span class="cl-ver">P5.0</span><span class="cl-tag" style="background:rgba(52,217,116,.15);color:var(--c-green);border-color:rgba(52,217,116,.3);">STABLE</span><span class="cl-date">2025</span></div>
+            <p class="cl-desc">防篡改权重算法正式落地，被抽中后概率衰减、自动重置，确保公平。系统版本体系完善，确立为面向化学教学的核心稳定版，全面覆盖课堂定位需求。</p>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div class="cl-dot" style="background:var(--c-purple);"></div>
+          <div class="cl-body">
+            <div class="cl-head"><span class="cl-ver">V3.0 — V4.0</span><span class="cl-date">2024</span></div>
+            <p class="cl-desc">全局热键随机抽签上线，无需切换窗口即可完成点名。Pyinstaller 打包为安装包，实现一键安装即用，开始在多所学校课堂中推广应用。</p>
+          </div>
+        </div>
+        <div class="cl-item">
+          <div class="cl-dot" style="background:var(--c-teal);"></div>
+          <div class="cl-body">
+            <div class="cl-head"><span class="cl-ver">V2.0</span><span class="cl-date">2024</span></div>
+            <p class="cl-desc">随机抽签功能正式上线，引入权重算法，抽签结果更公平。新增专属抽签页面，支持名单导入与结果展示，课堂互动体验大幅提升。</p>
+          </div>
+        </div>
+        <div class="cl-item cl-item-last">
+          <div class="cl-dot" style="background:var(--c-muted);"></div>
+          <div class="cl-body">
+            <div class="cl-head"><span class="cl-ver">V1.0</span><span class="cl-date">2024.10.26</span></div>
+            <p class="cl-desc">项目启动。源于一节化学课上的灵感，用 Python + Tkinter 实现基础计时功能，经 Pyinstaller 打包后首次在班级课堂中完成测试。</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <p class="dl-note">
       * V6.0 为测试版，部分非核心功能维护中；P5.0 为稳定正式版。<br>
       <br>
@@ -568,6 +756,108 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
         </div>
     </section>
 
+<!-- HELP -->
+<section id="help" class="page">
+  <div class="help-page">
+    <nav class="help-toc" id="help-toc">
+      <div class="help-toc-title"><i class="fas fa-list-ul"></i> 目录</div>
+      <ul class="help-toc-list">
+        <li><a href="#hs-start" onclick="scrollToSection('hs-start');return false"><span class="help-toc-icon">⚡</span>快速上手</a></li>
+        <li><a href="#hs-pick" onclick="scrollToSection('hs-pick');return false"><span class="help-toc-icon">🎲</span>随机抽签</a></li>
+        <li><a href="#hs-timer" onclick="scrollToSection('hs-timer');return false"><span class="help-toc-icon">⏱️</span>计时器</a></li>
+        <li><a href="#hs-clock" onclick="scrollToSection('hs-clock');return false"><span class="help-toc-icon">🕐</span>全屏时钟</a></li>
+        <li><a href="#hs-tools" onclick="scrollToSection('hs-tools');return false"><span class="help-toc-icon">🛠️</span>实用工具</a></li>
+        <li><a href="#hs-faq" onclick="scrollToSection('hs-faq');return false"><span class="help-toc-icon">❓</span>常见问题</a></li>
+        <li><a href="#hs-bugs" onclick="scrollToSection('hs-bugs');return false"><span class="help-toc-icon">🐛</span>已知问题</a></li>
+      </ul>
+    </nav>
+    <div class="help-page-content">
+      <div class="help-banner">
+      <span class="help-banner-icon">📧</span>
+      <h2>没找到想解决的问题？</h2>
+      <p>欢迎将你的问题或建议发送至<br><a href="https://mail.163.com/" target="_blank">xfyydsznb@163.com</a> · 我们会尽快回复</p>
+    </div>
+      <div class="help-section" id="hs-start">
+        <div class="help-section-header"><div class="help-section-icon hsi-blue">⚡</div><div><h3>快速上手</h3><span>GETTING STARTED</span></div></div>
+        <div class="help-steps">
+          <div class="help-step"><div class="help-step-num">01</div><div class="help-step-body"><h4>下载并安装软件</h4><p>前往<strong>下载中心</strong>选择版本：V6.0（功能最新）或 P5.0（运行最稳定）。下载后双击安装包，按提示完成安装，无需配置环境。</p></div></div>
+          <div class="help-step"><div class="help-step-num">02</div><div class="help-step-body"><h4>启动后找到悬浮球</h4><p>程序启动后屏幕左下角出现<strong>圆形悬浮球</strong>，可随意拖动。点击展开主窗口，再次点击收起。无操作 30 秒后自动贴边隐藏，鼠标靠近即可唤出。</p></div></div>
+          <div class="help-step"><div class="help-step-num">03</div><div class="help-step-body"><h4>导入班级名单</h4><p>切换到<strong>随机抽签</strong>页，点击「导入名单」选择 .txt / .xlsx / .csv 文件，或直接<strong>拖入窗口</strong>。支持多个班级名单，下拉切换。</p></div></div>
+          <div class="help-step"><div class="help-step-num">04</div><div class="help-step-body"><h4>开始使用</h4><p>一切就绪！按 <kbd class="help-kbd">Tab</kbd> 键随时唤出全局抽签，在计时器页设置倒计时，在时钟页开启全屏大屏时钟。</p></div></div>
+        </div>
+      </div>
+      <div class="help-section" id="hs-pick">
+        <div class="help-section-header"><div class="help-section-icon hsi-purple">🎲</div><div><h3>随机抽签</h3><span>RANDOM PICK</span></div></div>
+        <div class="help-steps">
+          <div class="help-step"><div class="help-step-num">01</div><div class="help-step-body"><h4>导入 / 切换名单</h4><p>点击随机抽签页右上角「导入名单」，选择 .txt / .xlsx / .csv 文件，或直接将文件<strong>拖入窗口</strong>。导入后在顶部下拉框可随时切换不同班级名单。</p></div></div>
+          <div class="help-step"><div class="help-step-num">02</div><div class="help-step-body"><h4>修改 / 删除名单内容</h4><p>在名单列表中<strong>双击某个姓名</strong>可直接编辑；点击姓名右侧的 ✕ 按钮可删除该条目。修改后点击「保存」即时生效，无需重新导入整份名单。</p></div></div>
+          <div class="help-step"><div class="help-step-num">03</div><div class="help-step-body"><h4>进行抽签</h4><p>按 <kbd class="help-kbd">Tab</kbd> 键（全局生效，不影响 PPT）或点击「抽取」按钮触发抽签。可在下方选择抽取 1 名、2 名，或点击「✎ 修改」自定义最多 10 名。</p></div></div>
+          <div class="help-step"><div class="help-step-num">04</div><div class="help-step-body"><h4>重置抽取记录</h4><p>抽签页底部点击「重置抽取记录」可将所有人的被抽次数清零，权重恢复均等。<strong>此操作不可撤销</strong>，请确认后再操作。</p></div></div>
+          <div class="help-step"><div class="help-step-num">05</div><div class="help-step-body"><h4>修改抽签热键</h4><p>进入<strong>设置页</strong>，找到「抽签快捷键」，点击后按下任意新按键（F1–F12、字母、方向键等）即可更换，自动保存。</p></div></div>
+        </div>
+        <div class="help-tip"><i class="fas fa-lightbulb"></i><p><strong>小技巧：</strong>将翻页笔上的空闲按键（例如映射为Tab的按键）设为快捷键，即可使用翻页笔快捷遥控抽签。</p></div>
+      </div>
+      <!-- 计时器章节 -->
+      <div class="help-section" id="hs-timer">
+        <div class="help-section-header"><div class="help-section-icon hsi-teal">⏱️</div><div><h3>计时器</h3><span>TIMER</span></div></div>
+        <div class="help-steps">
+          <div class="help-step"><div class="help-step-num">01</div><div class="help-step-body"><h4>正计时 A/B 双路</h4><p>切换到「正计时」，提供 A、B 两路独立秒表可同时运行。支持开始、暂停、继续、重置操作，精度达毫秒级。</p></div></div>
+          <div class="help-step"><div class="help-step-num">02</div><div class="help-step-body"><h4>倒计时</h4><p>点击 +/- 调整时间，或点击预设按钮快速累加（10秒/30秒/5分/10分/60分）。归零时触发<strong>红色波纹特效</strong>和提示音，剩余 10 秒时数字变橙色警示。</p></div></div>
+        </div>
+      </div>
+      <div class="help-section" id="hs-clock">
+        <div class="help-section-header"><div class="help-section-icon hsi-amber">🕐</div><div><h3>全屏时钟</h3><span>FULLSCREEN CLOCK</span></div></div>
+        <div class="help-steps">
+          <div class="help-step"><div class="help-step-num">01</div><div class="help-step-body"><h4>进入全屏时钟</h4><p>在主窗口顶部导航点击「时钟」页，点击「全屏显示」按钮，时钟将覆盖整个屏幕，显示当前时间与日期，适合考试、实验等大屏展示场景。</p></div></div>
+          <div class="help-step"><div class="help-step-num">02</div><div class="help-step-body"><h4>退出全屏</h4><p>点击右上角「退出全屏」按钮，或按 <kbd class="help-kbd">Esc</kbd> / <kbd class="help-kbd">Enter</kbd> / <kbd class="help-kbd">Space</kbd> 任意键退出。</p></div></div>
+        </div>
+      </div>
+      <div class="help-section" id="hs-tools">
+        <div class="help-section-header"><div class="help-section-icon hsi-rose">🛠️</div><div><h3>实用工具</h3><span>TOOLS</span></div></div>
+        <div class="help-steps">
+          <div class="help-step"><div class="help-step-num">01</div><div class="help-step-body"><h4>开启 / 关闭全局批注 <span class="help-tag ht-blue">V6</span></h4><p>在「实用工具」页点击「启用批注」开关，屏幕边缘出现工具栏。点击颜色按钮选择画笔颜色，然后在屏幕任意位置书写。点击「选择」按钮切换回鼠标穿透模式，批注不影响其他操作。点击「清除」可一键擦除所有标注。</p></div></div>
+          <div class="help-step"><div class="help-step-num">02</div><div class="help-step-body"><h4>配置时间岛 <span class="help-tag ht-blue">V6</span></h4><p>在「实用工具」页找到「时间岛」卡片，点击「显示」开关启用。拖动屏幕上的时间岛到合适位置；点击「详情」可开启背景框、调整文字颜色与透明度。鼠标悬停到时间岛上时它会自动淡出，方便操作下方内容。</p></div></div>
+          <div class="help-step"><div class="help-step-num">03</div><div class="help-step-body"><h4>调整界面设置</h4><p>点击主窗口右上角<strong>齿轮图标</strong>进入设置页。可调整：悬浮球透明度、动画速度、抽签热键、界面缩放比例（修改后需重启生效）、异步抽签弹窗的显示时长。</p></div></div>
+        </div>
+      </div>
+      <div class="help-section" id="hs-faq">
+        <div class="help-section-header"><div class="help-section-icon hsi-green">❓</div><div><h3>常见问题</h3><span>FAQ</span></div></div>
+        <p style="color:var(--c-muted);font-size:.85rem;margin-bottom:16px;">点击问题展开答案。如未找到答案，欢迎发邮件至 <a href="https://mail.163.com/" target="_blank" style="color:var(--c-blue)">xfyydsznb@163.com</a>。</p>
+        <div class="help-faq-group-title"><i class="fas fa-layer-group"></i> 通用问题</div>
+        <div class="help-faq">
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>软件打开后找不到窗口？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">软件启动后默认只显示悬浮球（屏幕左下角的圆形图标），不会直接弹出主窗口。点击悬浮球即可展开主界面。找不到悬浮球请查看任务栏右下角托盘区，右键托盘图标选择「显示主窗口」。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>Tab 热键和其他软件冲突怎么办？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">在设置页找到「抽签快捷键」，点击按钮后按下你想要的新热键（支持 F1-F12、字母、方向键、组合键等），自动保存生效。推荐使用 F9 或 CapsLock 等不常用按键。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>名单文件格式要求是什么？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">P5版本只可读取.txt文件。.txt 文件每行写一个姓名，必须以 UTF-8 编码保存（可用记事本另存为时选择 UTF-8）。.xlsx/.xls 第一列写姓名，从第一行开始，无需表头。文件名将作为名单名称显示在下拉框中。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>抽签权重怎么重置？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">在随机抽签页底部点击「重置抽取记录」，所有人被抽次数清零，权重恢复均等。此操作不可撤销，请谨慎使用。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>V6 和 P5 有什么区别，该下载哪个？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">V6.0 基于 PyQt5 全面重构，有流畅动画、时间岛等新功能，属于测试版。P5.0 是经长期验证的稳定版，功能完整、运行可靠，推荐初次使用或对稳定性要求高的场景。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>软件关闭后下次打开名单还在吗？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">是的，名单数据会自动保存在本地。下次启动软件后，上次导入的所有名单和抽签记录都会自动恢复，无需重新导入。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>P5版本程序缩放有误，部分按键无法点击。</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">由于系统dpi受限，暂时无法解决，可以在配置文件中修改设置项，然后尝试重启软件。。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>如何同时管理多个班级名单？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">每次点击「导入名单」选择不同文件，软件会将其作为独立名单添加到下拉列表中，文件名即为名单名称。点击顶部下拉框可随时切换班级，各名单的抽签记录互相独立。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>抽签弹窗的显示时间太短 / 太长怎么调？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">进入设置页，找到「弹窗显示时长」滑块，向左拖动缩短显示时间，向右拖动延长。设置即时生效，下次抽签时生效。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>倒计时结束后没有声音？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">请检查：① 系统音量是否已静音；② 确认使用的是倒计时模式而非正计时模式。</div></div></div>
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>V6.0界面显示太小 / 太大怎么调整？</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">进入设置页，找到「界面缩放」选项，调整到合适比例后重启软件后生效。推荐在 4K 高分屏上设置为 150% 或 200%。</div></div></div>
+        </div>
+      </div>
+      <!-- 已知问题章节 -->
+      <div class="help-section" id="hs-bugs">
+        <div class="help-section-header"><div class="help-section-icon hsi-rose">🐛</div><div><h3>已知问题</h3><span>KNOWN ISSUES</span></div></div>
+        <p style="color:var(--c-muted);font-size:.85rem;margin-bottom:20px;">以下为各版本目前已知的问题，我们正在积极修复，请留意后续更新。</p>
+        <div class="help-faq-group-title"><i class="fas fa-flask"></i> V6.0 测试版</div>
+        <div class="help-faq">
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>自动化引擎与全局批注工具无法使用</span><span class="help-tag ht-amber" style="margin-left:auto;margin-right:8px;flex-shrink:0">制作中</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">该功能目前仍在开发阶段，V6.0 中已预留入口但尚未正式启用。预计在后续版本中正式上线，敬请期待。</div></div></div>
+        </div>
+        <div class="help-faq-group-title" style="margin-top:20px"><i class="fas fa-shield-alt"></i> V5.3（P5）稳定版</div>
+        <div class="help-faq">
+          <div class="help-faq-item"><div class="help-faq-q" onclick="toggleFaq(this)"><span>名单导入失败 / 显示乱码</span><i class="fas fa-chevron-down"></i></div><div class="help-faq-a"><div class="help-faq-a-inner">P5 版本要求导入的 .txt 名单文件必须以 <strong>UTF-8</strong> 编码保存。如果名单出现乱码或导入失败，请用记事本打开名单文件，点击「文件 → 另存为」，在底部编码下拉框中选择 <strong>UTF-8</strong> 后保存，再重新导入即可。</div></div></div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /help-page-content -->
+  </div>
+</section>
+<button id="back-top" title="回到顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fas fa-arrow-up"></i>
+</button>
     <footer class="footer">
   <div class="footer-inner">
     <div class="footer-logo"><i class="fas fa-flask"></i> 化学计时器</div>
@@ -575,7 +865,8 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
       <a href="#" onclick="switchPage('home');return false">主页</a>
       <a href="#" onclick="switchPage('features');return false">功能展示</a>
       <a href="#" onclick="switchPage('download');return false">下载中心</a>
-                <a href="https://github.com/SuangSue/Chemistry_timer" target="_blank">GitHub</a>
+      <a href="#" onclick="switchPage('help');return false">帮助与反馈</a>
+      <a href="https://github.com/SuangSue/Chemistry_timer" target="_blank">GitHub</a>
             </div>
     <span class="footer-copy">© 2024-2026 SuangSue · MIT License</span>
         </div>
@@ -646,6 +937,118 @@ font-weight:700;font-size:.95rem;color:var(--c-muted);}
     if(img.complete){ img.style.opacity='1'; }
     else { img.addEventListener('load',function(){ img.style.opacity='1'; }); }
   });
+
+  // 汉堡菜单
+  var hamburger   = document.getElementById('hamburger');
+  var mobileMenu  = document.getElementById('mobileMenu');
+  var mobileLinks = document.querySelectorAll('.mobile-menu-link[data-page]');
+  window.closeMobileMenu = function(){
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  };
+  if(hamburger){
+    hamburger.addEventListener('click',function(e){
+      e.stopPropagation();
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    document.addEventListener('click',function(e){
+      if(!mobileMenu.contains(e.target) && e.target!==hamburger){
+        closeMobileMenu();
+      }
+    });
+  }
+  // 同步移动端菜单 active 状态
+  var origSwitch = window.switchPage;
+  window.switchPage = function(id){
+    origSwitch(id);
+    mobileLinks.forEach(function(l){ l.classList.remove('active'); });
+    var ml = document.querySelector('.mobile-menu-link[data-page="'+id+'"]');
+    if(ml) ml.classList.add('active');
+  };
+
+  // Changelog 滚动入场动画
+  var clItems = document.querySelectorAll('.cl-item');
+  if('IntersectionObserver' in window){
+    var clObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('cl-visible'); clObs.unobserve(e.target); }
+      });
+    },{threshold:0.15});
+    clItems.forEach(function(el){ clObs.observe(el); });
+  } else {
+    clItems.forEach(function(el){ el.classList.add('cl-visible'); });
+  }
+
+  // Hero 鼠标视差
+  var heroGrid = document.querySelector('.hero-grid');
+  var glowA    = document.querySelector('.hero-glow-a');
+  var glowB    = document.querySelector('.hero-glow-b');
+  document.addEventListener('mousemove',function(e){
+    var px = (e.clientX / window.innerWidth  - 0.5) * 2;
+    var py = (e.clientY / window.innerHeight - 0.5) * 2;
+    if(heroGrid){ heroGrid.style.transform = 'translate('+px*12+'px,'+py*8+'px)'; }
+    if(glowA){    glowA.style.transform    = 'translate('+px*20+'px,'+py*14+'px)'; }
+    if(glowB){    glowB.style.transform    = 'translate('+(-px*16)+'px,'+(-py*10)+'px)'; }
+  });
+
+  // 回到顶部
+  var backTop = document.getElementById('back-top');
+  window.addEventListener('scroll',function(){
+    if(window.scrollY > 300){ backTop.classList.add('visible'); }
+    else { backTop.classList.remove('visible'); }
+  });
+
+  // FAQ 折叠
+  window.toggleFaq = function(el){
+    var item = el.parentElement;
+    var isOpen = item.classList.contains('open');
+    document.querySelectorAll('.help-faq-item.open').forEach(function(i){ i.classList.remove('open'); });
+    if(!isOpen){ item.classList.add('open'); }
+  };
+
+  // 帮助页目录平滑滚动
+  window.scrollToSection = function(id){
+    var helpPage = document.getElementById('help');
+    var el = document.getElementById(id);
+    if(!el || !helpPage) return false;
+    var offset = helpPage.getBoundingClientRect().top + window.scrollY;
+    var elTop = el.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: elTop, behavior: 'smooth' });
+    return false;
+  };
+
+  // 帮助页目录滚动高亮
+  var tocLinks = document.querySelectorAll('.help-toc-list a[onclick]');
+  var helpSections = ['hs-start','hs-pick','hs-timer','hs-clock','hs-tools','hs-faq','hs-bugs'];
+  function updateTocActive(){
+    var scrollY = window.scrollY + 120;
+    var current = helpSections[0];
+    helpSections.forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && el.getBoundingClientRect().top + window.scrollY <= scrollY){ current = id; }
+    });
+    tocLinks.forEach(function(a){
+      var href = a.getAttribute('href');
+      if(href === '#' + current){ a.classList.add('toc-active'); }
+      else { a.classList.remove('toc-active'); }
+    });
+  }
+  var helpEl = document.getElementById('help');
+  if(helpEl){
+    helpEl.addEventListener('scroll', updateTocActive);
+  }
+  window.addEventListener('scroll', updateTocActive);
+
+  // 帮助页目录滚动
+  window.scrollToSection = function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    var offset = 80;
+    var top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+    return false;
+  };
 
 })();
     </script>
