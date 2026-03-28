@@ -265,6 +265,20 @@ color:var(--c-text);border:1px solid var(--c-border-hi);}
 .dl-note{text-align:center;color:var(--c-muted);font-size:.88rem;line-height:1.7;}
 .dl-note a{color:var(--c-blue);text-decoration:none;}
 .dl-note a:hover{text-decoration:underline;}
+/* 手机版下载卡片 */
+.dl-mobile-card{display:grid;grid-template-columns:1fr 200px;gap:32px;align-items:center;
+background:var(--c-card);border:2px solid var(--c-border);border-radius:var(--r-card);
+padding:36px 32px;position:relative;overflow:hidden;transition:all .3s;}
+.dl-mobile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+background:var(--grad-brand);opacity:.8;}
+.dl-mobile-card:hover{border-color:var(--c-blue);box-shadow:var(--shadow-glow);transform:translateY(-3px);}
+.dl-mobile-right{display:flex;justify-content:center;}
+.dl-mobile-qr{width:160px;height:160px;border-radius:16px;
+background:var(--c-faint);border:2px dashed var(--c-border-hi);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:10px;color:var(--c-muted);text-align:center;font-size:.78rem;line-height:1.5;}
+.dl-mobile-qr i{font-size:2.4rem;color:var(--c-blue);opacity:.5;}
+@media(max-width:968px){.dl-mobile-card{grid-template-columns:1fr;}.dl-mobile-right{display:none;}.dl-page{display:flex;flex-direction:column;}.dl-hero{order:-2;}#dl-mobile{order:-1;}#dl-windows{order:0;}}
 /* Changelog 时间线 */
 .cl-wrap{position:relative;padding-left:28px;}
 .cl-wrap::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:var(--c-border-hi);}
@@ -655,9 +669,11 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
       <h1>选择版本</h1>
       <p>所有版本完全免费 &amp; 开源 · MIT License</p>
       <p style="font-size:0.9rem;color:var(--c-muted);margin-top:16px;">
-        <strong>V6.0 测试版</strong>：功能最新、交互最现代 | <strong>P5.0 正式版</strong>：经过充分测试、运行稳定
+        <strong>V6.0 测试版</strong>：功能最新、交互最现代 | <strong>P5.0 正式版</strong>：经过充分测试、运行稳定 | <strong>手机版</strong>：Android App，开发中
       </p>
     </div>
+    <div id="dl-windows">
+      <div class="sec-label">// WINDOWS</div>
     <div class="dl-grid">
 
       <!-- 测试版 V6 -->
@@ -704,6 +720,49 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
             </div>
             
     </div><!-- /dl-grid -->
+    </div><!-- /dl-windows -->
+
+    <!-- 手机版下载 -->
+    <div id="dl-mobile" style="margin-bottom:64px;">
+      <div class="sec-label">// MOBILE</div>
+      <p class="sec-desc" style="margin-bottom:32px;">将课堂工具装进口袋，随时随地使用。Android 原生 App，基于 Flutter 构建。</p>
+      <div class="dl-mobile-card">
+        <div class="dl-mobile-left">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+            <img src="pictures/tubiao.png" style="width:52px;height:52px;border-radius:14px;object-fit:contain;" onerror="this.style.display='none'">
+            <div>
+              <h3 style="font-family:'Noto Sans SC',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:2px;">课堂点名计时器 · 手机版</h3>
+              <p style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--c-muted);">Android APK · Flutter · arm64</p>
+            </div>
+            <span class="chip chip-beta" style="margin-left:4px;">BETA</span>
+          </div>
+          <ul class="dl-features" style="margin-bottom:28px;">
+            <li><i class="fas fa-check"></i>随机抽签 · 倒计时 · 正计时</li>
+            <li><i class="fas fa-check"></i>全屏时钟，适配手机大屏展示</li>
+            <li><i class="fas fa-check"></i>本地数据存储，无需网络</li>
+            <li><i class="fas fa-check"></i>暗色 / 亮色主题切换</li>
+          </ul>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a class="btn btn-dl" id="apk-download-btn" href="#" style="width:auto;padding:12px 28px;opacity:.45;pointer-events:none;cursor:not-allowed;">
+              <i class="fas fa-download"></i> 下载 APK（即将上线）
+            </a>
+            <a class="btn btn-gh" href="https://github.com/SuangSue/Chemistry_timer" target="_blank" style="width:auto;padding:12px 28px;">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+          </div>
+          <p style="font-size:.78rem;color:var(--c-muted);margin-top:14px;line-height:1.7;">
+            <i class="fas fa-info-circle" style="color:var(--c-blue);margin-right:4px;"></i>
+            手机版目前正在开发中，APK 构建完成后将第一时间在此提供下载。<br>安装前请在手机设置中开启「允许安装未知来源应用」。
+          </p>
+        </div>
+        <div class="dl-mobile-right">
+          <div class="dl-mobile-qr">
+            <i class="fas fa-mobile-alt"></i>
+            <p>APK 发布后<br>可扫码下载</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Changelog 时间线 -->
     <div style="margin-top:64px;">
