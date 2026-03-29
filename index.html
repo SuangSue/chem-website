@@ -160,6 +160,31 @@ font-family:"JetBrains Mono",monospace;font-size:.7rem;font-weight:700;}
 .chip-beta{background:rgba(246,168,50,.12);color:var(--c-amber);border:1px solid rgba(246,168,50,.25);}
 .chip-stable{background:rgba(91,156,246,.12);color:var(--c-blue);border:1px solid rgba(91,156,246,.25);}
 .feat-page{max-width:1280px;margin:0 auto;padding:56px 28px 80px;}
+/* 功能展示版本切换 */
+.feat-version-nav{display:flex;justify-content:center;margin-bottom:48px;}
+.feat-version-tabs{display:inline-flex;background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:4px;gap:4px;}
+.fvt-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:10px;border:none;background:transparent;color:var(--c-muted);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;}
+.fvt-btn:hover{color:var(--c-text);background:var(--c-faint);}
+.fvt-btn.fvt-active{background:var(--grad-brand);color:#fff;box-shadow:0 4px 16px rgba(91,156,246,.25);}
+.fvt-badge{font-size:.65rem;background:rgba(255,255,255,.2);border-radius:6px;padding:2px 6px;margin-left:4px;letter-spacing:.04em;}
+/* 手机版核心展示块 */
+.feat-mobile-core{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin:0 0 64px;}
+.feat-mobile-img-slot{position:relative;display:flex;justify-content:center;}
+.feat-mobile-img{width:260px;max-width:100%;border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.4);border:1px solid var(--c-border);}
+.feat-mobile-img-fallback{width:260px;height:480px;border-radius:28px;background:var(--c-card);border:2px dashed var(--c-border);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--c-muted);font-size:.9rem;}
+.feat-mobile-img-fallback i{font-size:2.5rem;opacity:.3;}
+/* 移动端弹窗 */
+.feat-mobile-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(24px);background:var(--c-card);border:1px solid var(--c-blue);border-radius:16px;padding:16px 20px;max-width:320px;width:calc(100% - 48px);box-shadow:0 8px 32px rgba(0,0,0,.3);z-index:9999;display:none;flex-direction:column;gap:12px;opacity:0;transition:opacity .3s,transform .3s;}
+.feat-mobile-toast.show{display:flex;animation:toastIn .35s cubic-bezier(.34,1.56,.64,1) forwards;}
+.feat-mobile-toast.hiding{animation:toastOut .3s ease forwards;}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(24px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes toastOut{from{opacity:1;transform:translateX(-50%) translateY(0);}to{opacity:0;transform:translateX(-50%) translateY(16px);}}
+.fmt-title{font-size:.9rem;font-weight:700;color:var(--c-text);line-height:1.5;}
+.fmt-title i{color:var(--c-blue);margin-right:6px;}
+.fmt-btns{display:flex;gap:8px;}
+.fmt-btn-yes{flex:1;padding:8px;border-radius:10px;border:none;background:var(--grad-brand);color:#fff;font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;}
+.fmt-btn-no{flex:1;padding:8px;border-radius:10px;border:1px solid var(--c-border);background:transparent;color:var(--c-muted);font-size:.85rem;cursor:pointer;font-family:inherit;}
+@media(max-width:968px){.feat-mobile-core{grid-template-columns:1fr;gap:32px;}.feat-mobile-img-slot{order:-1;}.feat-mobile-img,.feat-mobile-img-fallback{width:200px;height:370px;}}
 .sec-label{font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.15em;
 text-transform:uppercase;color:var(--c-blue);margin-bottom:8px;}
 .sec-title{font-family:"Noto Sans SC",sans-serif;
@@ -489,6 +514,16 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
 <section id="features" class="page">
   <div class="feat-page">
 
+    <!-- 功能展示版本切换目录 -->
+    <nav class="feat-version-nav" id="feat-version-nav">
+      <div class="feat-version-tabs">
+        <button class="fvt-btn fvt-active" id="fvt-pc" onclick="switchFeatVersion('pc')"><i class="fas fa-desktop"></i> 电脑版</button>
+        <button class="fvt-btn" id="fvt-mobile" onclick="switchFeatVersion('mobile')"><i class="fas fa-mobile-alt"></i> 手机版 App<span class="fvt-badge">BETA</span></button>
+      </div>
+    </nav>
+
+    <!-- 电脑版内容 -->
+    <div id="feat-pc-content">
     <div class="sec-head">
       <div class="sec-label">// FEATURES</div>
       <h2 class="sec-title">全面升级的功能体系</h2>
@@ -660,6 +695,116 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
                 </div>
             </div>
     </div><!-- /feat-grid -->
+    </div><!-- /feat-pc-content -->
+
+    <!-- 手机版内容 -->
+    <div id="feat-mobile-content" style="display:none">
+      <div class="sec-head">
+        <div class="sec-label">// MOBILE APP</div>
+        <h2 class="sec-title">课堂点名计时器 · 手机版</h2>
+        <p class="sec-desc">基于 Flutter 构建的 Android 原生 App，将课堂工具装进口袋。支持随机点名、多模式计时、课表管理，亮色 / 暗色主题自由切换。</p>
+      </div>
+
+      <!-- 手机版核心功能：课表编辑 -->
+      <div class="core-block feat-mobile-core">
+        <div>
+          <div class="core-tag"><i class="fas fa-bolt"></i>&nbsp;核心功能</div>
+          <h3 class="core-title">可视化课表<br>编辑与查看</h3>
+          <p class="core-desc">内置完整课表编辑器，支持自定义节次、天数、科目与教室。导入背景图片后，课表以沉浸式风格呈现，开学第一天即可上手。</p>
+          <ul class="core-list">
+            <li><i class="fas fa-check-circle"></i>自定义上午 / 下午 / 晚自习节次数量</li>
+            <li><i class="fas fa-check-circle"></i>科目、教室预设，一键填入课表</li>
+            <li><i class="fas fa-check-circle"></i>支持导入背景图片，沉浸式展示</li>
+            <li><i class="fas fa-check-circle"></i>数据本地保存，重启自动恢复</li>
+          </ul>
+        </div>
+        <div class="feat-mobile-img-slot">
+          <img src="pictures/app/schedule.png" class="feat-mobile-img" alt="课表编辑" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="feat-mobile-img-fallback"><i class="fas fa-calendar-alt"></i><span>课表截图</span></div>
+        </div>
+      </div>
+
+      <!-- 手机版功能网格 -->
+      <div class="sec-head" style="margin-top:60px">
+        <div class="sec-label">// ALL FEATURES</div>
+        <h2 class="sec-title">全部功能一览</h2>
+      </div>
+      <div class="feat-grid">
+
+        <!-- 随机抽签 -->
+        <div class="feat-card">
+          <div class="feat-img-box">
+            <img src="pictures/app/lottery.png" class="feat-img" alt="随机点名" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="feat-fallback"><i class="fas fa-dice"></i>随机点名</div>
+          </div>
+          <div class="feat-body">
+            <div class="feat-icon-row"><div class="feat-icon"><i class="fas fa-dice"></i></div><span class="feat-name">随机抽签点名</span></div>
+            <p class="feat-desc">导入名单一键抽签，拼音分组快速查找，抽签动画配合震动反馈，课堂气氛满分。</p>
+          </div>
+        </div>
+
+        <!-- 倒计时 / 正计时 -->
+        <div class="feat-card">
+          <div class="feat-img-box">
+            <img src="pictures/app/timer.png" class="feat-img" alt="计时器" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="feat-fallback"><i class="fas fa-hourglass-half"></i>计时器</div>
+          </div>
+          <div class="feat-body">
+            <div class="feat-icon-row"><div class="feat-icon"><i class="fas fa-hourglass-top"></i></div><span class="feat-name">倒计时 / 番茄钟</span></div>
+            <p class="feat-desc">倒计时、正计时、番茄钟三合一。圆形进度环实时展示，归零时触发震动提醒。</p>
+          </div>
+        </div>
+
+        <!-- 双组正计时 -->
+        <div class="feat-card">
+          <div class="feat-img-box">
+            <img src="pictures/app/countup.png" class="feat-img" alt="双组正计时" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="feat-fallback"><i class="fas fa-hourglass-bottom"></i>双组计时</div>
+          </div>
+          <div class="feat-body">
+            <div class="feat-icon-row"><div class="feat-icon"><i class="fas fa-hourglass-bottom"></i></div><span class="feat-name">双组正计时</span></div>
+            <p class="feat-desc">A 组 / B 组独立秒表并行运行，毫秒精度，适合小组实验计时对比。</p>
+          </div>
+        </div>
+
+        <!-- 全屏时钟 -->
+        <div class="feat-card">
+          <div class="feat-img-box">
+            <img src="pictures/app/clock.png" class="feat-img" alt="全屏时钟" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="feat-fallback"><i class="fas fa-clock"></i>全屏时钟</div>
+          </div>
+          <div class="feat-body">
+            <div class="feat-icon-row"><div class="feat-icon"><i class="fas fa-clock"></i></div><span class="feat-name">全屏时钟</span></div>
+            <p class="feat-desc">沉浸式全屏时钟，适合考试大屏展示。从计时器页右上角一键进入。</p>
+          </div>
+        </div>
+
+        <div class="feat-card">
+          <div class="feat-img-box">
+            <img src="pictures/app/theme.png" class="feat-img" alt="主题切换" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="feat-fallback"><i class="fas fa-palette"></i>主题</div>
+          </div>
+          <div class="feat-body">
+            <div class="feat-icon-row"><div class="feat-icon"><i class="fas fa-palette"></i></div><span class="feat-name">亮色 / 暗色主题</span></div>
+            <p class="feat-desc">日间 / 夜间主题一键切换，护眼配色，适合各类课堂光线环境。</p>
+          </div>
+        </div>
+
+        <!-- 设置同步 -->
+        <div class="feat-card">
+          <div class="feat-img-box">
+            <img src="pictures/app/settings.png" class="feat-img" alt="设置" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="feat-fallback"><i class="fas fa-cog"></i>设置</div>
+          </div>
+          <div class="feat-body">
+            <div class="feat-icon-row"><div class="feat-icon"><i class="fas fa-cog"></i></div><span class="feat-name">个性化设置</span></div>
+            <p class="feat-desc">自定义科目预设、教室列表、课表结构（节次/天数）等，数据本地存储。</p>
+          </div>
+        </div>
+
+      </div><!-- /feat-grid -->
+    </div><!-- /feat-mobile-content -->
+
   </div><!-- /feat-page -->
 </section><!-- /features -->
 <!-- DOWNLOAD -->
@@ -678,7 +823,7 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
 
       <!-- 测试版 V6 -->
       <div class="dl-card">
-        <div class="dl-rec">最新版本 · 建议下载</div>
+        <div class="dl-rec">最新版本·建议下载</div>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
           <img src="pictures/v6.png" style="width:48px;height:48px;border-radius:12px;object-fit:contain;" onerror="this.style.display='none'">
           <span class="chip chip-beta">BETA</span>
@@ -731,28 +876,24 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
           <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
             <img src="pictures/tubiao.png" style="width:52px;height:52px;border-radius:14px;object-fit:contain;" onerror="this.style.display='none'">
             <div>
-              <h3 style="font-family:'Noto Sans SC',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:2px;">课堂点名计时器 · 手机版</h3>
+              <h3 style="font-family:'Noto Sans SC',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:2px;">课堂点名计时器·App</h3>
               <p style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--c-muted);">Android APK · Flutter · arm64</p>
             </div>
-            <span class="chip chip-beta" style="margin-left:4px;">BETA</span>
           </div>
           <ul class="dl-features" style="margin-bottom:28px;">
             <li><i class="fas fa-check"></i>随机抽签 · 倒计时 · 正计时</li>
-            <li><i class="fas fa-check"></i>全屏时钟，适配手机大屏展示</li>
+            <li><i class="fas fa-check"></i>全屏时钟，适配手机展示</li>
             <li><i class="fas fa-check"></i>本地数据存储，无需网络</li>
-            <li><i class="fas fa-check"></i>暗色 / 亮色主题切换</li>
+            <li><i class="fas fa-check"></i>自定义课表功能</li>
           </ul>
           <div style="display:flex;gap:12px;flex-wrap:wrap;">
             <a class="btn btn-dl" id="apk-download-btn" href="#" style="width:auto;padding:12px 28px;opacity:.45;pointer-events:none;cursor:not-allowed;">
               <i class="fas fa-download"></i> 下载 APK（即将上线）
             </a>
-            <a class="btn btn-gh" href="https://github.com/SuangSue/Chemistry_timer" target="_blank" style="width:auto;padding:12px 28px;">
-              <i class="fab fa-github"></i> GitHub
-            </a>
           </div>
           <p style="font-size:.78rem;color:var(--c-muted);margin-top:14px;line-height:1.7;">
             <i class="fas fa-info-circle" style="color:var(--c-blue);margin-right:4px;"></i>
-            手机版目前正在开发中，APK 构建完成后将第一时间在此提供下载。<br>安装前请在手机设置中开启「允许安装未知来源应用」。
+            手机版目前正在开发中，构建完成后将在此提供下载。<br>安装前请在手机设置中开启「允许安装未知来源应用」。
           </p>
         </div>
         <div class="dl-mobile-right">
@@ -768,8 +909,15 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
     <div style="margin-top:64px;">
       <div class="sec-label">// CHANGELOG</div>
       <h2 class="sec-title" style="margin-bottom:8px;">版本历程</h2>
-      <p class="sec-desc" style="margin-bottom:40px;">从一节化学课的灵感，到双版本正式发布。</p>
+      <p class="sec-desc" style="margin-bottom:40px;">从一节化学课的灵感，到双版本正式发布，再到手机 App 开发启航。</p>
       <div class="cl-wrap">
+        <div class="cl-item">
+          <div class="cl-dot" style="background:var(--grad-brand);background:linear-gradient(135deg,#5b9cf6,#a07aff);"></div>
+          <div class="cl-body">
+            <div class="cl-head"><span class="cl-ver">手机版 App</span><span class="cl-tag" style="background:rgba(91,156,246,.15);color:var(--c-blue);border-color:rgba(91,156,246,.3);">BETA</span><span class="cl-date">2026</span></div>
+            <p class="cl-desc">基于 Flutter 构建的 Android 原生 App 正式立项开发。涵盖随机点名、倒计时 / 正计时 / 番茄钟、双组秒表、全屏时钟、可视化课表编辑等核心功能，支持亮色 / 暗色主题切换，数据完全本地存储。</p>
+          </div>
+        </div>
         <div class="cl-item">
           <div class="cl-dot" style="background:var(--c-blue);"></div>
           <div class="cl-body">
@@ -914,6 +1062,15 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
     </div><!-- /help-page-content -->
   </div>
 </section>
+<!-- 移动端功能展示提示弹窗 -->
+<div class="feat-mobile-toast" id="feat-mobile-toast">
+  <div class="fmt-title"><i class="fas fa-mobile-alt"></i>您当前为移动端，要查看课堂点名计时器 App 的功能展示吗？</div>
+  <div class="fmt-btns">
+    <button class="fmt-btn-yes" onclick="switchFeatVersion('mobile');closeToast()">查看手机版</button>
+    <button class="fmt-btn-no" id="fmt-btn-no" onclick="closeToast()">继续看电脑版（<span id="fmt-countdown">5</span>s）</button>
+    <button class="fmt-btn-no" onclick="document.getElementById('feat-mobile-toast').classList.remove('show')">继续看电脑版</button>
+  </div>
+</div>
 <button id="back-top" title="回到顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <i class="fas fa-arrow-up"></i>
 </button>
@@ -950,7 +1107,43 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
         prog.style.opacity='0';
         setTimeout(function(){ prog.style.width='0'; prog.style.opacity='1'; },200);
       },300);
+      // 切换到功能展示页时，移动端弹出提示
+      if(id === 'features' && window.innerWidth <= 968){
+        showFeatToast();
+      }
     },320);
+  };
+
+  // 功能展示版本切换（带淡入淡出动画）
+  window.switchFeatVersion = function(ver){
+    var pc = document.getElementById('feat-pc-content');
+    var mob = document.getElementById('feat-mobile-content');
+    var btnPc = document.getElementById('fvt-pc');
+    var btnMob = document.getElementById('fvt-mobile');
+    var hiding = ver === 'mobile' ? pc : mob;
+    var showing = ver === 'mobile' ? mob : pc;
+    if(!hiding || !showing) return;
+    hiding.style.transition = 'opacity .25s';
+    hiding.style.opacity = '0';
+    setTimeout(function(){
+      hiding.style.display = 'none';
+      hiding.style.opacity = '';
+      hiding.style.transition = '';
+      showing.style.display = 'block';
+      showing.style.opacity = '0';
+      showing.style.transition = 'opacity .3s';
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        showing.style.opacity = '1';
+        setTimeout(function(){ showing.style.transition = ''; showing.style.opacity = ''; },300);
+      }); });
+    },250);
+    if(ver === 'mobile'){
+      if(btnPc) btnPc.classList.remove('fvt-active');
+      if(btnMob) btnMob.classList.add('fvt-active');
+    } else {
+      if(btnPc) btnPc.classList.add('fvt-active');
+      if(btnMob) btnMob.classList.remove('fvt-active');
+    }
   };
 
   navLinks.forEach(function(l){
@@ -1050,6 +1243,49 @@ padding:28px 36px;margin-bottom:48px;position:relative;overflow:hidden;text-alig
     if(glowA){    glowA.style.transform    = 'translate('+px*20+'px,'+py*14+'px)'; }
     if(glowB){    glowB.style.transform    = 'translate('+(-px*16)+'px,'+(-py*10)+'px)'; }
   });
+
+  // 移动端功能展示弹窗 - 关闭函数（带动画）
+  window.closeToast = function(){
+    var toast = document.getElementById('feat-mobile-toast');
+    if(!toast) return;
+    toast.classList.add('hiding');
+    setTimeout(function(){ toast.classList.remove('show'); toast.classList.remove('hiding'); }, 300);
+  };
+
+  // 移动端功能展示弹窗 - 显示函数（带5秒倒计时）
+  function showFeatToast(){
+    var toast = document.getElementById('feat-mobile-toast');
+    if(!toast || sessionStorage.getItem('feat-toast-shown')) return;
+    sessionStorage.setItem('feat-toast-shown','1');
+    setTimeout(function(){
+      toast.classList.add('show');
+      var secs = 5;
+      var cd = document.getElementById('fmt-countdown');
+      if(cd) cd.textContent = secs;
+      var tickTimer = setInterval(function(){
+        secs--;
+        if(cd) cd.textContent = secs;
+        if(secs <= 0){
+          clearInterval(tickTimer);
+          window.closeToast();
+        }
+      }, 1000);
+      // 点击任意按钮时清除倒计时
+      toast.querySelectorAll('button').forEach(function(btn){
+        btn.addEventListener('click', function(){ clearInterval(tickTimer); }, {once:true});
+      });
+    }, 600);
+  }
+
+  // 移动端功能展示弹窗：页面加载时检测（处理强制刷新场景）
+  (function(){
+    if(window.innerWidth <= 968){
+      var activePage = document.querySelector('.page.active');
+      if(activePage && activePage.id === 'features'){
+        showFeatToast();
+      }
+    }
+  })();
 
   // 回到顶部
   var backTop = document.getElementById('back-top');
